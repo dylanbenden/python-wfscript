@@ -7,12 +7,12 @@ Install python-wfscript `default` branch:
 python -m pip install git+https://github.com/dylanbenden/python-wfscript.git
 ```
 
-Install Flowly `flow-5-foo` branch:
+Install python-wfscript `wfs-5-foo` branch:
 ```bash
-python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@flow-5-foo
+python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@wfs-5-foo
 ```
 
-Install Flowly `v0.1` release/tag:
+Install python-wfscript `v0.1` release/tag:
 ```bash
 python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@v0.1
 ```

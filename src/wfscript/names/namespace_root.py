@@ -5,12 +5,16 @@ from ..utils.names import find_yaml_files
 
 
 class NamespaceRoot(object):
-    def __init__(self, identity, file_path, actions, contained_namespaces):
+    def __init__(self, identity, file_path, actions, contained_namespaces, unit_test_loading_bypass=False):
         self._identity = identity
         self._path = '/'.join(file_path.split('/')[:-1])
-        self._actions = actions
+        self._actions = dict()
+        self._action_functions = actions
         self._contained_namespaces = contained_namespaces
         self._methods = dict()
+        if not unit_test_loading_bypass:
+            self.load_methods()
+            self.load_actions()
 
     @property
     def identity(self):
@@ -51,3 +55,10 @@ class NamespaceRoot(object):
                         # latest production version is also default version
                         self._methods[default_identity] = method
                 self._methods[method_identity] = method
+
+    def load_actions(self):
+        from .store import NameStore
+        for action in self._action_functions:
+            action_versions = NameStore.pop_action_versions(action.__name__)
+            for action_identity, fx in action_versions:
+                self._actions[action_identity] = fx

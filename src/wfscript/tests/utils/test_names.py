@@ -16,6 +16,6 @@ def test_path_to_identity():
 def test_find_yaml_files():
     expected = [
         f'{contained_path}{os.path.sep}{method_version}'
-        for method_version in ['1_0.yaml', '1_1.yaml']
+        for method_version in ['1_0.yaml', '1_1.yaml', '1_2.yaml']
     ]
     assert find_yaml_files(testing_namespace_root) == expected

@@ -10,3 +10,9 @@ class MetaSectionKey(ConstantNamespace):
     NAME = 'name'
     VERSION = 'version'
     STATUS = 'status'
+
+
+class MetaStatusChoice(ConstantNamespace):
+    PRODUCTION = 'production'
+    TESTING = 'testing'
+    DEVELOPMENT = 'development'

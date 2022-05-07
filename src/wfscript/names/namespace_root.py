@@ -1,4 +1,5 @@
-from ..constants.loading import TagName
+from ..constants.identity import IdentityDelimeter
+from ..constants.loading import TagName, MetaSectionKey, MetaStatusChoice
 from ..utils.identity import construct_identity
 from ..utils.names import find_yaml_files
 
@@ -33,9 +34,20 @@ class NamespaceRoot(object):
 
     def load_methods(self):
         from ..loading.loader import load_yaml_document
+        semantic_versions = dict()
         for method_path in find_yaml_files(self):
             with open(method_path, 'r') as document:
                 method = load_yaml_document(document.read())
                 # todo: WFS-16 - validate method on load
                 method_identity = construct_identity(method[TagName.META].value)
+                numeric_version = method[TagName.META].value[MetaSectionKey.VERSION]
+                semantic_version = method[TagName.META].value[MetaSectionKey.STATUS]
+                if numeric_version > semantic_versions.get(semantic_version, 0):
+                    semantic_versions[semantic_version] = numeric_version
+                    default_identity = f'{method_identity.split(IdentityDelimeter.VERSION)[0]}'
+                    semantic_identity = f'{default_identity}{IdentityDelimeter.VERSION}{semantic_version}'
+                    self._methods[semantic_identity] = method
+                    if semantic_version == MetaStatusChoice.PRODUCTION:
+                        # latest production version is also default version
+                        self._methods[default_identity] = method
                 self._methods[method_identity] = method

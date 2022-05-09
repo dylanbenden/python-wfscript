@@ -1,9 +1,9 @@
-from ..content_root import testing_namespace_root
+from ..content_root_loading import loading_namespace_root
 from ...names.store import NameStore
 
 
 def test_exists():
-    assert NameStore.exists(testing_namespace_root.identity) is True
+    assert NameStore.exists(loading_namespace_root.identity) is True
 
 
 def test_namespace_root():

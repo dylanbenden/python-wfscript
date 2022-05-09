@@ -1,13 +1,13 @@
 import yaml
 
+from . import constructor_for_tag
 from .base import YAMLConfiguredObject
 
 _loader = yaml.SafeLoader
 
 
 def _object_constructor(loader, node):
-    # select more-specific constructor starting in WFS-10
-    klass = YAMLConfiguredObject
+    klass = constructor_for_tag.get(node.tag, YAMLConfiguredObject)
     return klass(loader, node.tag, klass.construct_value(loader, node))
 
 

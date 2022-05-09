@@ -62,3 +62,7 @@ class NamespaceRoot(object):
             action_versions = NameStore.pop_action_versions(action.__name__)
             for action_identity, fx in action_versions:
                 self._actions[action_identity] = fx
+
+    def get_action(self, identity):
+        if identity in self.actions:
+            return self.actions[identity]

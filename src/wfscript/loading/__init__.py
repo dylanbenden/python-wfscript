@@ -1,9 +1,10 @@
 from .data import DataTag, StateTag
-from .executors import ActionTag
+from .executors import ActionTag, MethodTag
 from ..constants.loading import TagName
 
 constructor_for_tag = {
     TagName.Action: ActionTag,
+    TagName.Method: MethodTag,
     TagName.Data: DataTag,
     TagName.State: StateTag
 }

@@ -6,6 +6,7 @@ class TagName(ConstantNamespace):
     State = '!State'
     Data = '!Data'
     Action = '!Action'
+    Method = '!Method'
 
 
 class MetaSectionKey(ConstantNamespace):

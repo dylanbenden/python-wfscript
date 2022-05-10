@@ -24,3 +24,21 @@ def test_action_tag():
     assert node.identity == identity
     assert node.input == {'name': name}
     assert node.execute(context) == {TagName.Data: {output_target_name: expected_greeting}}
+
+
+def test_method_tag():
+    identity = 'content_root/executing::greet_user==1.0'
+    output_target_name = 'some_target'
+
+    snippet = f'''
+        - !Method
+          {MethodKeyword.IDENTITY}: {identity}
+          {MethodKeyword.INPUT}:
+            foo: bar
+          {MethodKeyword.OUTPUT_TARGET}: {TagName.Data} {output_target_name}
+    '''
+    node = _load_yaml(snippet)[0]
+
+    assert node.tag == TagName.Method
+    assert node.identity == identity
+    # todo: test execution in WFS-20

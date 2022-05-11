@@ -1,0 +1,16 @@
+- !META
+  namespace: content_root_validation/personnel
+  name: validate_person
+  version: 1.0
+  status: development
+
+- !INPUT
+  name:
+    data_type: string
+    required: true
+  favorite_number:
+    data_type: integer
+    required: false
+  favorite_drink:
+    data_type: string
+    required: false

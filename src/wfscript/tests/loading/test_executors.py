@@ -15,7 +15,7 @@ def test_action_tag():
           {MethodKeyword.IDENTITY}: {identity}
           {MethodKeyword.INPUT}:
             name: {name}
-          {MethodKeyword.OUTPUT_TARGET}: {TagName.Data} {output_target_name}
+          {MethodKeyword.OUTPUT_TARGET}: {TagName.State} {output_target_name}
     '''
     context = RunContext(namespace_root=executing_namespace_root, data=None, state=None)
     node = _load_yaml(snippet)[0]
@@ -23,7 +23,7 @@ def test_action_tag():
     assert node.tag == TagName.Action
     assert node.identity == identity
     assert node.input == {'name': name}
-    assert node.execute(context) == {TagName.Data: {output_target_name: expected_greeting}}
+    assert node.execute(context) == {TagName.State: {output_target_name: expected_greeting}}
 
 
 def test_method_tag():
@@ -35,7 +35,7 @@ def test_method_tag():
           {MethodKeyword.IDENTITY}: {identity}
           {MethodKeyword.INPUT}:
             foo: bar
-          {MethodKeyword.OUTPUT_TARGET}: {TagName.Data} {output_target_name}
+          {MethodKeyword.OUTPUT_TARGET}: {TagName.State} {output_target_name}
     '''
     node = _load_yaml(snippet)[0]
 

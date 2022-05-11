@@ -1,5 +1,7 @@
 from ..constants.identity import IdentityDelimeter
 from ..constants.loading import TagName, MetaSectionKey, MetaStatusChoice
+from ..executors.method import MethodExecutor
+from ..executors.validator import ValidatorExecutor
 from ..utils.identity import construct_identity
 from ..utils.names import find_yaml_files
 
@@ -11,9 +13,9 @@ class NamespaceRoot(object):
         self._actions = dict()
         self._action_functions = actions
         self._contained_namespaces = contained_namespaces
-        self._methods = dict()
+        self._yaml_documents = dict()
         if not unit_test_loading_bypass:
-            self.load_methods()
+            self.load_yaml_documents()
             self.load_actions()
 
     @property
@@ -33,28 +35,38 @@ class NamespaceRoot(object):
         return self._contained_namespaces
 
     @property
-    def methods(self):
-        return self._methods
+    def yaml_documents(self):
+        return self._yaml_documents
 
-    def load_methods(self):
+    def set_domain(self, domain):
+        self._domain = domain
+
+    def load_actions(self):
+        from .store import NameStore
+        for action in self._action_functions:
+            action_versions = NameStore.pop_action_versions(action.__name__)
+            for action_identity, fx in action_versions:
+                self._actions[action_identity] = fx
+
+    def load_yaml_documents(self):
         from ..loading.loader import load_yaml_document
         semantic_versions = dict()
-        for method_path in find_yaml_files(self):
-            with open(method_path, 'r') as document:
-                method = load_yaml_document(document.read())
-                # todo: WFS-16 - validate method on load
-                method_identity = construct_identity(method[TagName.META].value)
-                numeric_version = method[TagName.META].value[MetaSectionKey.VERSION]
-                semantic_version = method[TagName.META].value[MetaSectionKey.STATUS]
+        for document_path in find_yaml_files(self):
+            with open(document_path, 'r') as document:
+                yaml_document = load_yaml_document(document.read())
+                # todo: WFS-16 - validate yaml_document on load
+                document_identity = construct_identity(yaml_document[TagName.META].value)
+                numeric_version = yaml_document[TagName.META].value[MetaSectionKey.VERSION]
+                semantic_version = yaml_document[TagName.META].value[MetaSectionKey.STATUS]
                 if numeric_version > semantic_versions.get(semantic_version, 0):
                     semantic_versions[semantic_version] = numeric_version
-                    default_identity = f'{method_identity.split(IdentityDelimeter.VERSION)[0]}'
+                    default_identity = f'{document_identity.split(IdentityDelimeter.VERSION)[0]}'
                     semantic_identity = f'{default_identity}{IdentityDelimeter.VERSION}{semantic_version}'
-                    self._methods[semantic_identity] = method
+                    self._yaml_documents[semantic_identity] = yaml_document
                     if semantic_version == MetaStatusChoice.PRODUCTION:
                         # latest production version is also default version
-                        self._methods[default_identity] = method
-                self._methods[method_identity] = method
+                        self._yaml_documents[default_identity] = yaml_document
+                self._yaml_documents[document_identity] = yaml_document
 
     def load_actions(self):
         from .store import NameStore

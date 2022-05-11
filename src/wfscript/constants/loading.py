@@ -3,8 +3,9 @@ from . import ConstantNamespace
 
 class TagName(ConstantNamespace):
     META = '!META'
+    INPUT = '!INPUT'
+    Input = '!Input'
     State = '!State'
-    Data = '!Data'
     Action = '!Action'
     Method = '!Method'
 

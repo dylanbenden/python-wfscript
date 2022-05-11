@@ -1,0 +1,5 @@
+- !META
+  namespace: content_root/loading
+  name: versioned_method
+  version: 1.2
+  status: testing

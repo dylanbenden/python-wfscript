@@ -6,13 +6,13 @@ def test_properties():
     assert loading_namespace_root.identity == 'wfscript.tests.content_root_loading'
     assert loading_namespace_root.path == content_root_path
     assert loading_namespace_root.contained_namespaces == list()
-    assert loading_namespace_root.methods == dict()
+    assert loading_namespace_root.yaml_documents == dict()
     assert loading_namespace_root.actions == dict()
 
 
 def test_load_methods():
-    assert loading_namespace_root.methods == dict()
-    loading_namespace_root.load_methods()
+    assert loading_namespace_root.yaml_documents == dict()
+    loading_namespace_root.load_yaml_documents()
     v1_identity = 'content_root/loading::versioned_method==1.0'
     v1_1_identity = 'content_root/loading::versioned_method==1.1'
     v1_2_identity = 'content_root/loading::versioned_method==1.2'
@@ -27,7 +27,7 @@ def test_load_methods():
         prod_identity,
         test_identity
     ]
-    assert sorted(list(loading_namespace_root.methods.keys())) == sorted(expected)
+    assert sorted(list(loading_namespace_root.yaml_documents.keys())) == sorted(expected)
 
     v1_expected_meta = {
         'name': 'versioned_method',
@@ -50,12 +50,12 @@ def test_load_methods():
     prod_expected_meta = v1_1_expected_meta
     test_expected_meta = v1_2_expected_meta
     unversioned_expected_meta = prod_expected_meta
-    assert loading_namespace_root.methods[v1_identity][TagName.META].value == v1_expected_meta
-    assert loading_namespace_root.methods[v1_1_identity][TagName.META].value == v1_1_expected_meta
-    assert loading_namespace_root.methods[v1_2_identity][TagName.META].value == v1_2_expected_meta
-    assert loading_namespace_root.methods[prod_identity][TagName.META].value == prod_expected_meta
-    assert loading_namespace_root.methods[test_identity][TagName.META].value == test_expected_meta
-    assert loading_namespace_root.methods[unversioned_identity][TagName.META].value == unversioned_expected_meta
+    assert loading_namespace_root.yaml_documents[v1_identity][TagName.META].value == v1_expected_meta
+    assert loading_namespace_root.yaml_documents[v1_1_identity][TagName.META].value == v1_1_expected_meta
+    assert loading_namespace_root.yaml_documents[v1_2_identity][TagName.META].value == v1_2_expected_meta
+    assert loading_namespace_root.yaml_documents[prod_identity][TagName.META].value == prod_expected_meta
+    assert loading_namespace_root.yaml_documents[test_identity][TagName.META].value == test_expected_meta
+    assert loading_namespace_root.yaml_documents[unversioned_identity][TagName.META].value == unversioned_expected_meta
 
 
 def test_load_actions():

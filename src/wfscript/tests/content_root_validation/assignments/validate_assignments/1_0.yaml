@@ -1,0 +1,22 @@
+- !META
+  namespace: content_root_validation/assignments
+  name: validate_assignments
+  version: 1.0
+  status: development
+
+- !INPUT
+  duty_assignments:
+    data_type: array
+    member_data_type: object
+    member_spec:
+      ship_name:
+        data_type: string
+        required: true
+      hull_number:
+        data_type: string
+        required: true
+      personnel:
+        data_type: array
+        member_data_type: object
+        member_spec:
+          id: content_root_validation/personnel::validate_person==1.0

@@ -1,0 +1,17 @@
+- !META
+  namespace: content_root_validation/personnel
+  name: spec_identify_people
+  version: 1.0
+  status: development
+
+- !INPUT
+  personnel:
+    data_type: array
+    min_size: 2
+    max_size: 3
+    member_data_type: object
+    member_spec:
+      id: content_root_validation/personnel::validate_person==1.0
+  lucky_numbers:
+    data_type: array
+    member_data_type: integer

@@ -1,4 +1,4 @@
-from ..content_root_loading import loading_namespace_root
+from ..content_root.loading import loading_namespace_root
 from ...names.store import NameStore
 
 

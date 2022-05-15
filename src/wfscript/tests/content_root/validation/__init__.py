@@ -1,4 +1,4 @@
-from ...names.store import NameStore
+from ....names.store import NameStore
 
 validation_namespace_root = NameStore.namespace_root(
     identity=__name__,

@@ -68,12 +68,16 @@ class NamespaceRoot(object):
                         self._yaml_documents[default_identity] = yaml_document
                 self._yaml_documents[document_identity] = yaml_document
 
-    def load_actions(self):
-        from .store import NameStore
-        for action in self._action_functions:
-            action_versions = NameStore.pop_action_versions(action.__name__)
-            for action_identity, fx in action_versions:
-                self._actions[action_identity] = fx
+    def get_method(self, identity):
+        if identity in self.yaml_documents:
+            return MethodExecutor(identity, self.yaml_documents[identity], self)
+        else:
+            raise RuntimeError(f'Method {identity} not found in namespace_root {self.identity}')
+
+    def get_validator(self, identity):
+        if identity in self.yaml_documents:
+            return ValidatorExecutor(identity, self.yaml_documents[identity][TagName.INPUT].value, self)
+        raise RuntimeError(f'Validator {identity} not found in namespace_root {self.identity}')
 
     def get_action(self, identity):
         if identity in self.actions:

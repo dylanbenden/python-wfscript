@@ -1,0 +1,23 @@
+- !META
+  namespace: content_root/executing
+  name: greet_user
+  version: 1.0
+  status: production
+
+
+- !INPUT
+  name:
+    data_type: string
+    required: true
+
+
+- !BODY
+  - !Action
+    id: content_root/executing::hello_world==production
+    input:
+      name: !Input name
+    output>>: !Output greeting
+
+
+- !RETURN
+  greeting: !Output greeting

@@ -1,0 +1,2 @@
+class MaterialMixin(object):
+    pass

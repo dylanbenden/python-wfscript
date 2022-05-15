@@ -1,5 +1,5 @@
-from .executing import hello_world
-from ...names.store import NameStore
+from . import hello_world
+from ....names.store import NameStore
 
 executing_namespace_root = NameStore.namespace_root(
     identity=__name__,

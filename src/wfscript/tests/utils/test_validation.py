@@ -1,157 +1,39 @@
 import pytest
 
-from ..content_root_validation import validation_namespace_root
+from ...utils.validation import validate_expected_and_required_values
 
 
-def test_simple_input_validator():
-    identity = 'content_root_validation/personnel::validate_person==1.0'
-    validator = validation_namespace_root.get_validator(identity)
+def test_validate_expected_and_required():
+    required = ['b']
+    expected = ['a', 'b', 'c']
+    kw_configs = {
+        'expected_values': expected,
+        'required_values': required,
+        'descriptor': 'item'
+        }
 
-    valid_examples = [
-        {
-            'name': 'Q'
-        },
-        {
-            'name': 'Kathryn Janeway',
-            'favorite_drink': 'coffee',
-        },
-        {
-            'name': 'William Riker',
-            'favorite_number': 1
-        },
+    validator = validate_expected_and_required_values
 
-    ]
     # happy paths
-    for test_data in valid_examples:
-        assert validator.validate(test_data) is True
+    assert validator(provided_values=['b'], **kw_configs) is True
+    assert validator(provided_values=['a', 'b'], **kw_configs) is True
+    assert validator(provided_values=['c', 'b'], **kw_configs) is True
+    assert validator(provided_values=['c', 'a', 'b'], **kw_configs) is True
+    assert validator(provided_values=['c', 'a', 'b'], **kw_configs) is True
+    assert validator(provided_values=['a', 'c', 'a', 'b'], **kw_configs) is True
 
-    # fail paths
-    # extra field provided
-    invalid_extra_field = {
-        'name': 'Seven',
-        'designation': 'Seven of Nine, Tertiary Adjunct of Unimatrix 01'
-    }
+    # required element missing
     with pytest.raises(RuntimeError) as excinfo:
-        validator.validate(invalid_extra_field)
-    assert 'Unexpected data/payload key(s) provided' in str(excinfo.value)
+        validator(provided_values=['a', 'c'], **kw_configs)
+    assert 'Required item(s) missing' in str(excinfo.value)
 
-    # wrong data type: str for int
-    invalid_wrong_data_type_1 = {
-        'name': 'Will Riker',
-        'favorite_number': 'Number One'
-    }
+    # extra element provided
     with pytest.raises(RuntimeError) as excinfo:
-        validator.validate(invalid_wrong_data_type_1)
-    assert 'Expected integer, got: Number One' in str(excinfo.value)
+        validator(provided_values=['a', 'b', 'c', 'd'], **kw_configs)
+    assert 'Unexpected item(s) provided' in str(excinfo.value)
 
-    # wrong data type: array of int, not int
-    invalid_wrong_data_type_2 = {
-        'name': 'Will Riker',
-        'favorite_number': [1]
-    }
-    with pytest.raises(RuntimeError) as excinfo:
-        validator.validate(invalid_wrong_data_type_2)
-    assert 'Expected integer, got: [1]' in str(excinfo.value)
-
-
-
-def test_validate_array_spec():
-    identity = 'content_root_validation/personnel::spec_identify_people==1.0'
-    validator = validation_namespace_root.get_validator(identity)
-
-    valid_input = {
-        'personnel': [
-            {
-                'name': 'Q'
-            },
-            {
-                'name': 'Kathryn Janeway',
-                'favorite_drink': 'coffee',
-            },
-            {
-                'name': 'William Riker',
-                'favorite_number': 1
-            },
-        ],
-        'lucky_numbers': [42, 47, 127]
-    }
-
-    assert validator.validate(valid_input) is True
-
-    # Fail paths: too few or too many members (min_size 2; max_size 3)
-    not_enough_members = {
-        'personnel': [
-            {
-                'name': 'Q'
-            },
-        ],
-        'lucky_numbers': [42, 47, 127]
-    }
-    with pytest.raises(RuntimeError) as excinfo:
-        validator.validate(not_enough_members)
-    assert 'Not enough elements' in str(excinfo.value)
-
-    too_many_members = {
-        'personnel': [
-            {
-                'name': 'Q'
-            },
-            {
-                'name': 'Kathryn Janeway',
-                'favorite_drink': 'coffee',
-            },
-            {
-                'name': 'William Riker',
-                'favorite_number': 1
-            },
-            {
-                'name': 'Neelix'
-            }
-        ],
-        'lucky_numbers': [42, 47, 127]
-    }
-    with pytest.raises(RuntimeError) as excinfo:
-        validator.validate(too_many_members)
-    assert 'Too many elements' in str(excinfo.value)
-
-
-def test_validate_nested_array_spec():
-    identity = 'content_root_validation/assignments::validate_assignments==1.0'
-    validator = validation_namespace_root.get_validator(identity)
-
-    valid_input = {
-        'duty_assignments': [
-            {
-                'ship_name': 'Enterprise',
-                'hull_number': 'NCC-1701',
-                'personnel': [
-                    {
-                        'name': 'Jean-Luc Picard',
-                        'favorite_drink': 'Tea, Earl Grey, hot'
-                    },
-                    {
-                        'name': 'William Riker',
-                        'favorite_number': 1
-                    },
-                    {
-                        'name': 'Dr. Beverly Crusher'
-                    }
-                ]
-            },
-            {
-                'ship_name': 'Voyager',
-                'hull_number': 'NCC-74656',
-                'personnel': [
-                    {
-                        'name': 'Kathryn Janeway',
-                        'favorite_drink': 'coffee',
-                    },
-                    {
-                        'name': 'Harry Kim',
-                    }
-                ]
-            },
-        ]
-    }
-    assert validator.validate(valid_input) is True
+    # string provided instead of non-string iterable
+    with pytest.raises(TypeError) as excinfo:
+        validator(provided_values='abc', **kw_configs)
+    assert 'Expecting non-string collection' in str(excinfo.value)
 

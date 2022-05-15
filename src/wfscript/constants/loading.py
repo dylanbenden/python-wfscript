@@ -4,10 +4,20 @@ from . import ConstantNamespace
 class TagName(ConstantNamespace):
     META = '!META'
     INPUT = '!INPUT'
-    Input = '!Input'
+    BODY = '!BODY'
+    RETURN = '!RETURN'
+    ALIASES = '!ALIASES'
+    Material = '!Material'
+    Materials = '!Materials'
+    Asset = '!Asset'
+    Assets = '!Assets'
     State = '!State'
+    Input = '!Input'
+    Output = '!Output'
     Action = '!Action'
+    Validator = '!Validator'
     Method = '!Method'
+    Step = '!Step'
 
 
 class MetaSectionKey(ConstantNamespace):

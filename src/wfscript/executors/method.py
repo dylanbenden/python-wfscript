@@ -3,7 +3,7 @@ from ..constants.loading import TagName
 from ..constants.payload import PayloadKey
 from ..runtime.context import get_context
 from ..runtime.output import MethodReturn
-from ..utils.method import handle_method_or_step_body, render_tag_dict
+from ..utils.method import handle_method_or_step_body, render_tag_dict, items_after_step
 
 
 class MethodExecutor(DocumentExecutor):
@@ -34,8 +34,8 @@ class MethodExecutor(DocumentExecutor):
             return {output_target.tag: output.result}
         return output
 
-    def run(self, input_data=None, state=None):
-        context = get_context(self.identity, self.namespace_root, input_data, state)
+    def run(self, input_data=None, state=None, resume_info=None):
+        context = get_context(self.identity, self.namespace_root, input_data, state, resume_info)
         result = self._run(context)
         return result.render()
 
@@ -43,13 +43,14 @@ class MethodExecutor(DocumentExecutor):
         try:
             next_items = self._load_next_items(context)
             possible_step_return = handle_method_or_step_body(next_items, context)
-            if possible_step_return is None:
-                # we got to the end of the Method body, time to render a return
-                result = MethodReturn(
+            if possible_step_return is not None:
+                return possible_step_return
+            else:
+                # if no StepReturn, we're at the end of the Method and ready to return
+                return MethodReturn(
                     result=render_tag_dict(self.return_section, context),
                     context=context
                 )
-            return result
         except RuntimeError as err:
             msg = f'While executing {context.method} the following exception was raised:\n' \
                   f'\t - {str(err)}' \
@@ -57,7 +58,10 @@ class MethodExecutor(DocumentExecutor):
                   f'Input Data: {context.request[PayloadKey.INPUT].value}'
             raise RuntimeError(msg)
 
+
     def _load_next_items(self, context):
-        if context.state.last_method is not None:
+        if context.last_step is not None:
+            if context.last_step[PayloadKey.METHOD] == self.identity:
+                return items_after_step(self.body_section, context.last_step[PayloadKey.STEP])
             raise NotImplemented('todo: body_items_after_node')
         return self.body_section

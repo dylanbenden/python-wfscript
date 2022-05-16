@@ -1,5 +1,5 @@
 from .json import unfloat
-from ..constants.loading import TagName
+from ..constants.loading import TagName, MethodKeyword
 from ..loading.base import YAMLConfiguredObject
 from ..runtime.output import StepReturn
 
@@ -9,6 +9,13 @@ def handle_method_or_step_body(body, context):
         result = handle_item(item, context)
         if isinstance(result, StepReturn):
             return result
+
+
+def items_after_step(body, step_name):
+    for idx, item in enumerate(body):
+        if item.tag == TagName.Step and item.value['name'] == step_name:
+            return body[idx + 1:]
+    raise RuntimeError(f'Step {step_name} not found')
 
 
 def handle_item(item, context):
@@ -45,11 +52,43 @@ def run_executor(executor, action_or_method_tag, context):
         return result
 
 
+def handle_method(method, context):
+    return run_executor(
+        executor=context.namespace_root.get_method(method.identity),
+        action_or_method_tag=method,
+        context=context
+    )
+
+
+def handle_step(step, context):
+    if 'name' not in step.value:
+        raise RuntimeError(f'Step requires a name; Provided: {step.value}')
+    results = handle_method_or_step_body(step.value[MethodKeyword.BODY], context)
+    if isinstance(results, StepReturn):
+        return results
+    if MethodKeyword.RETURN in step.value:
+        context.state.set_resume_state(method=context.method, step=step.value['name'])
+        return StepReturn(
+            result=render_tag_dict(step.value[MethodKeyword.RETURN], context),
+            context=context
+        )
+
+
+def handle_state(state_tag, context):
+    data_updates = dict()
+    for key, value in state_tag.value.items():
+        if isinstance(value, YAMLConfiguredObject):
+            data_updates[key] = value.render_payload(context)
+        else:
+            data_updates[key] = value
+    context.state.update(data_updates)
+
+
 handler_for_tag = {
     TagName.Action: handle_action,
-    # TagName.Method: handle_method,
-    # TagName.Step: handle_step,
-    # TagName.State: handle_state
+    TagName.Method: handle_method,
+    TagName.Step: handle_step,
+    TagName.State: handle_state
 }
 render_for_tag = {
     # TagName.Material: render_material,

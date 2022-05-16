@@ -32,9 +32,6 @@ class BaseRuntimeData(object):
         raise RuntimeError(f'You may not set values directly on {self.__class__.__name__}, use '
                            f'update() instead')
 
-    def keys(self):
-        return self._value.keys()
-
 
 class Input(BaseRuntimeData):
     # non-persisted store for data provided at invocation
@@ -60,6 +57,7 @@ class State(BaseRuntimeData):
     @property
     def resume_info(self):
         return {
+            PayloadKey.STATE: self.value,
             PayloadKey.METHOD: self.last_method,
             PayloadKey.STEP: self.last_step
         }

@@ -1,6 +1,6 @@
 import pytest
 
-from ..content_root_validation import validation_namespace_root
+from ...tests.content_root.validation import validation_namespace_root
 
 
 def test_simple_input_validator():

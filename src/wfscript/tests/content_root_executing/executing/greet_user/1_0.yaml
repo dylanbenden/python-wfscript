@@ -1,6 +1,0 @@
-- !META
-  namespace: content_root/executing
-  name: greet_user
-  version: 1.0
-  status: production
-

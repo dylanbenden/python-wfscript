@@ -1,7 +1,7 @@
 import os
 
-from .loading import hello_world
-from ...names.store import NameStore
+from . import hello_world
+from ....names.store import NameStore
 
 content_root_path = os.path.sep.join(__file__.split(os.path.sep)[:-1])
 

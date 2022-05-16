@@ -1,8 +1,10 @@
 from ..constants.identity import IdentityDelimeter
-from ..constants.loading import TagName, MetaSectionKey, MetaStatusChoice
+from ..constants.loading import TagName, MetaSectionKey, MetaStatusChoice, MethodKeyword
+from ..constants.payload import PayloadKey
 from ..executors.method import MethodExecutor
 from ..executors.validator import ValidatorExecutor
 from ..utils.identity import construct_identity
+from ..utils.method import items_after_step
 from ..utils.names import find_yaml_files
 
 
@@ -68,13 +70,28 @@ class NamespaceRoot(object):
                         self._yaml_documents[default_identity] = yaml_document
                 self._yaml_documents[document_identity] = yaml_document
 
-    def load_actions(self):
-        from .store import NameStore
-        for action in self._action_functions:
-            action_versions = NameStore.pop_action_versions(action.__name__)
-            for action_identity, fx in action_versions:
-                self._actions[action_identity] = fx
+    def get_method(self, identity):
+        if identity in self.yaml_documents:
+            return MethodExecutor(identity, self.yaml_documents[identity], self)
+        raise RuntimeError(f'Method {identity} could not be resolved by namespace_root {self.identity}')
+
+    def get_validator(self, identity, last_step_info=None):
+        if last_step_info is None:
+            if identity not in self.yaml_documents:
+                raise RuntimeError(f'Validator {identity} could not be resolved by namespace_root {self.identity}')
+            input_block = self.yaml_documents[identity][TagName.INPUT].value
+        else:
+            identity = last_step_info[PayloadKey.METHOD]
+            step_name = last_step_info[PayloadKey.STEP]
+            next_step = items_after_step(self.yaml_documents[identity][TagName.BODY].value, step_name)[0]
+            input_block = next_step.value.get(MethodKeyword.INPUT)
+        if input_block is not None:
+            validation_info = input_block
+        else:
+            validation_info = dict()
+        return ValidatorExecutor(identity, validation_info, self)
 
     def get_action(self, identity):
         if identity in self.actions:
             return self.actions[identity]
+        raise RuntimeError(f'Action {identity} could not be resolved by namespace_root {self.identity}')

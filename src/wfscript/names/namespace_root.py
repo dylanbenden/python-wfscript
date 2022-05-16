@@ -12,6 +12,7 @@ class NamespaceRoot(object):
     def __init__(self, identity, file_path, actions, contained_namespaces, unit_test_loading_bypass=False):
         self._identity = identity
         self._path = '/'.join(file_path.split('/')[:-1])
+        self._domain = None
         self._actions = dict()
         self._action_functions = actions
         self._contained_namespaces = contained_namespaces
@@ -27,6 +28,10 @@ class NamespaceRoot(object):
     @property
     def path(self):
         return self._path
+
+    @property
+    def domain(self):
+        return self._domain
 
     @property
     def actions(self):

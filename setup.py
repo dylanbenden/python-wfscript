@@ -14,7 +14,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='python-wfscript',
-    version='0.1',
+    version='0.2.1',
     description='A high-level, domain-specific language for authoring executable workflow content',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -22,8 +22,7 @@ setup(
     author='Dylan Benden',
     author_email='dylan@flowflow.org',
     classifiers=[
-        'Development Status :: 1 - Planning',
-        # 'Development Status :: 4 - Beta',
+        'Development Status :: 4 - Beta',
         # 'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',

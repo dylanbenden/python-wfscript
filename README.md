@@ -7,12 +7,11 @@ Install python-wfscript `default` branch:
 python -m pip install git+https://github.com/dylanbenden/python-wfscript.git
 ```
 
-Install python-wfscript `wfs-5-foo` branch:
+Install python-wfscript `v0.2` release/tag:
 ```bash
-python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@wfs-5-foo
-```
-
-Install python-wfscript `v0.1` release/tag:
+python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@v0.2
+``` 
+or, e.g
 ```bash
-python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@v0.1
+pipenv install git+https://github.com/dylanbenden/python-wfscript.git@v0.2#egg=python-wfscript
 ```

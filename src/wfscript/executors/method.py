@@ -60,7 +60,7 @@ class MethodExecutor(DocumentExecutor):
 
 
     def _load_next_items(self, context):
-        if context.last_step is not None:
+        if context.last_step:
             if context.last_step[PayloadKey.METHOD] == self.identity:
                 return items_after_step(self.body_section, context.last_step[PayloadKey.STEP])
             raise NotImplemented('todo: body_items_after_node')

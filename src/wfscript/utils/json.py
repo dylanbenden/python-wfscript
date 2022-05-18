@@ -1,7 +1,5 @@
 import decimal
-
-from ..constants.identity import IdentityDelimeter
-from ..materials.mixin import MaterialMixin
+from ..materials.mixin import WorkflowMaterial
 
 
 def preserialize(data):
@@ -9,9 +7,8 @@ def preserialize(data):
         return {k: preserialize(v) for k, v in data.items()}
     elif isinstance(data, list):
         return [preserialize(v) for v in data]
-    elif isinstance(data, MaterialMixin):
-        domain_identity = data.domain.identity
-        return f'{domain_identity}{IdentityDelimeter.DOMAIN}{getattr(data, data.barcode_field_name)}'
+    elif isinstance(data, WorkflowMaterial):
+        return data.identity
     else:
         if isinstance(data, decimal.Decimal):
             return float(data)

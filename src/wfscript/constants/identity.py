@@ -5,3 +5,4 @@ class IdentityDelimeter(ConstantNamespace):
     DOMAIN = '++'
     NAMESPACE = '::'
     VERSION = '=='
+    MATERIAL = '::'

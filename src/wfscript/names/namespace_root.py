@@ -78,10 +78,12 @@ class NamespaceRoot(object):
     def get_method(self, identity):
         if identity in self.yaml_documents:
             return MethodExecutor(identity, self.yaml_documents[identity], self)
+        else:
+            return self.domain.get_method(identity)
         raise RuntimeError(f'Method {identity} could not be resolved by namespace_root {self.identity}')
 
     def get_validator(self, identity, last_step_info=None):
-        if last_step_info is None:
+        if not last_step_info:
             if identity not in self.yaml_documents:
                 raise RuntimeError(f'Validator {identity} could not be resolved by namespace_root {self.identity}')
             input_block = self.yaml_documents[identity][TagName.INPUT].value
@@ -99,4 +101,6 @@ class NamespaceRoot(object):
     def get_action(self, identity):
         if identity in self.actions:
             return self.actions[identity]
+        else:
+            return self.domain.get_action(identity)
         raise RuntimeError(f'Action {identity} could not be resolved by namespace_root {self.identity}')

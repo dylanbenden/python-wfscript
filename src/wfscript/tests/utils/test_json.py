@@ -1,19 +1,25 @@
 from decimal import Decimal
 
-from ...constants.identity import IdentityDelimeter
-from ...materials.mixin import MaterialMixin
+from ...materials.mixin import WorkflowMaterial
 from ...utils.json import unfloat, preserialize
 
 class BogusDomain(object):
     pass
 
 
+class BogusMaterial(WorkflowMaterial):
+    model_identity = 'bogus/model'
+    identity_field = 'bogus_id_field'
+
+    @property
+    def bogus_id_field(self):
+        return 123
+
+
 def test_preserialize():
-    bogus_material = MaterialMixin()
-    bogus_material.domain = BogusDomain()
-    bogus_material.domain.identity = 'domid333'
-    bogus_material.barcode_field_name = 'barcode'
-    bogus_material.barcode = 'abc123'
+    bogus_material = BogusMaterial()
+    expected_material_identity = 'bogus/model::123'
+    assert bogus_material.identity == expected_material_identity
 
     to_preserialize = {
         'name': 'Kira Nerys',
@@ -28,7 +34,8 @@ def test_preserialize():
         'subdict': {
             'sublist': [
                 11.1,
-                {'material': f'{bogus_material.domain.identity}{IdentityDelimeter.DOMAIN}{bogus_material.barcode}'}]
+                {'material': expected_material_identity}
+            ]
         }
     }
     assert preserialize(to_preserialize) == expected

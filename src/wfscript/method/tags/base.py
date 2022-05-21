@@ -1,7 +1,7 @@
 import yaml
 
 
-class YAMLConfiguredObject(object):
+class YAMLConfigured(object):
     def __init__(self, loader, tag, value):
         self._loader = loader
         self._tag = tag

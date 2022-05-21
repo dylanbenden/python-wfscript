@@ -2,7 +2,7 @@ from . import ConstantNamespace
 
 
 class TagName(ConstantNamespace):
-    META = '!META'
+    ID = '!ID'
     INPUT = '!INPUT'
     BODY = '!BODY'
     RETURN = '!RETURN'
@@ -19,12 +19,10 @@ class TagName(ConstantNamespace):
     Method = '!Method'
     Step = '!Step'
 
-
-class MetaSectionKey(ConstantNamespace):
-    NAMESPACE = 'namespace'
-    NAME = 'name'
-    VERSION = 'version'
-    STATUS = 'status'
+    NAMESPACE = '!NAMESPACE'
+    NAME = '!NAME'
+    VERSION = '!VERSION'
+    STATUS = '!STATUS'
 
 
 class MetaStatusChoice(ConstantNamespace):

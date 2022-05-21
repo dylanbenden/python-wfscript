@@ -4,6 +4,7 @@ from ..constants.loading import TagName
 
 
 constructor_for_tag = {
+    TagName.ID: IDTag,
     TagName.Action: ActionTag,
     TagName.Method: MethodTag,
     TagName.Input: InputTag,

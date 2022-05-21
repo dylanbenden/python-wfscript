@@ -6,3 +6,10 @@ class IdentityDelimeter(ConstantNamespace):
     NAMESPACE = '::'
     VERSION = '=='
     MATERIAL = '::'
+
+
+class DocumentStatus(ConstantNamespace):
+    PRODUCTION = 'production'
+    TESTING = 'testing'
+    DEVELOPMENT = 'development'
+    DEPRECATED = 'deprecated'

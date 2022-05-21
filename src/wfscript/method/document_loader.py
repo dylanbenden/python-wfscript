@@ -1,13 +1,13 @@
 import yaml
 
 from . import constructor_for_tag
-from .base import YAMLConfiguredObject
+from .tags.base import YAMLConfigured
 
 _loader = yaml.SafeLoader
 
 
 def _object_constructor(loader, node):
-    klass = constructor_for_tag.get(node.tag, YAMLConfiguredObject)
+    klass = constructor_for_tag.get(node.tag, YAMLConfigured)
     return klass(loader, node.tag, klass.construct_value(loader, node))
 
 

@@ -1,28 +1,24 @@
 from .base import YAMLConfigured
+from ...constants.identity import IdentityDelimeter
 from ...constants.method import TagName
 from ...utils.identity import deconstruct_identity
 
 
-class IDTag(YAMLConfigured):
-    tag_name = TagName.ID
+class IdentitySectionTag(YAMLConfigured):
+    tag_name = TagName.IDENTITY
 
     @classmethod
     def construct_value(cls, loader, node):
-        value = super(IDTag, cls).construct_value(loader, node)
+        value = super(IdentitySectionTag, cls).construct_value(loader, node)
         if isinstance(value, list):
             return {
                 node.tag: node.value
                 for node in value
             }
-        elif isinstance(value, dict):
-            return dict
-        else:
+        elif isinstance(value, str) and IdentityDelimeter.NAMESPACE in value:
             return deconstruct_identity(value)
-        # meta section values are *always* strings, even if they *could* be represented as a float or int
-        return {k: str(v) for k, v in value.items()}
+        else:
+            raise RuntimeError(f'{cls.tag_name} is not expecting the configuration value {value}')
 
     def render(self, *_):
-        return {
-            node.tag: node.value
-            for node in self.value
-        }
+        return self.value

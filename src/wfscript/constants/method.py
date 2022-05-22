@@ -2,7 +2,7 @@ from . import ConstantNamespace
 
 
 class TagName(ConstantNamespace):
-    ID = '!ID'
+    IDENTITY = '!IDENTITY'
     INPUT = '!INPUT'
     BODY = '!BODY'
     RETURN = '!RETURN'

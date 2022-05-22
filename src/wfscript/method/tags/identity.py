@@ -3,12 +3,12 @@ from ...constants.method import TagName
 from ...utils.identity import deconstruct_identity
 
 
-class IDTag(YAMLConfigured):
-    tag_name = TagName.ID
+class IdentitySectionTag(YAMLConfigured):
+    tag_name = TagName.IDENTITY
 
     @classmethod
     def construct_value(cls, loader, node):
-        value = super(IDTag, cls).construct_value(loader, node)
+        value = super(IdentitySectionTag, cls).construct_value(loader, node)
         if isinstance(value, list):
             return {
                 node.tag: node.value

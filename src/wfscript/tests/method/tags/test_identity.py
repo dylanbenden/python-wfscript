@@ -4,15 +4,15 @@ from ....method.document_loader import load_yaml_document
 
 def test_identity_tag():
     document = '''
-    - !ID
+    - !IDENTITY
       - !NAMESPACE tests/loading
       - !NAME test_loader
       - !VERSION 1.0
       - !STATUS testing
     '''
     result = load_yaml_document(document)
-    id_node = result[TagName.ID]
-    assert id_node.tag == TagName.ID
+    id_node = result[TagName.IDENTITY]
+    assert id_node.tag == TagName.IDENTITY
     assert id_node.value == {
         TagName.NAMESPACE: 'tests/loading',
         TagName.NAME: 'test_loader',
@@ -21,11 +21,11 @@ def test_identity_tag():
     }
 
     alternate_syntax_versioned = '''
-- !ID tests/loading::test_loader==1.0
+- !IDENTITY tests/loading::test_loader==1.0
 '''
     result = load_yaml_document(alternate_syntax_versioned)
-    id_node = result[TagName.ID]
-    assert id_node.tag == TagName.ID
+    id_node = result[TagName.IDENTITY]
+    assert id_node.tag == TagName.IDENTITY
     assert id_node.value == {
         TagName.NAMESPACE: 'tests/loading',
         TagName.NAME: 'test_loader',
@@ -33,11 +33,11 @@ def test_identity_tag():
     }
 
     alternate_syntax_status = '''
-- !ID tests/loading::test_loader==testing
+- !IDENTITY tests/loading::test_loader==testing
 '''
     result = load_yaml_document(alternate_syntax_status)
-    id_node = result[TagName.ID]
-    assert id_node.tag == TagName.ID
+    id_node = result[TagName.IDENTITY]
+    assert id_node.tag == TagName.IDENTITY
     assert id_node.value == {
         TagName.NAMESPACE: 'tests/loading',
         TagName.NAME: 'test_loader',

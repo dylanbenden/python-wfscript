@@ -1,5 +1,5 @@
 from ..constants.identity import IdentityDelimeter
-from ..constants.loading import TagName, MetaSectionKey, MetaStatusChoice, MethodKeyword
+from ..constants.method import TagName, MetaStatusChoice, MethodKeyword
 from ..constants.payload import PayloadKey
 from ..executors.method import MethodExecutor
 from ..executors.validator import ValidatorExecutor
@@ -56,15 +56,15 @@ class NamespaceRoot(object):
                 self._actions[action_identity] = fx
 
     def load_yaml_documents(self):
-        from ..loading.loader import load_yaml_document
+        from ..method.document_loader import load_yaml_document
         semantic_versions = dict()
         for document_path in find_yaml_files(self):
             with open(document_path, 'r') as document:
                 yaml_document = load_yaml_document(document.read())
                 # todo: WFS-16 - validate yaml_document on load
-                document_identity = construct_identity(yaml_document[TagName.META].value)
-                numeric_version = yaml_document[TagName.META].value[MetaSectionKey.VERSION]
-                semantic_version = yaml_document[TagName.META].value[MetaSectionKey.STATUS]
+                document_identity = construct_identity(yaml_document[TagName.ID].value)
+                numeric_version = yaml_document[TagName.ID].value[TagName.VERSION]
+                semantic_version = yaml_document[TagName.ID].value[TagName.STATUS]
                 if numeric_version > semantic_versions.get(semantic_version, 0):
                     semantic_versions[semantic_version] = numeric_version
                     default_identity = f'{document_identity.split(IdentityDelimeter.VERSION)[0]}'

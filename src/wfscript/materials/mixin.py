@@ -2,8 +2,8 @@ from ..constants.identity import IdentityDelimeter
 
 
 class WorkflowMaterial(object):
-    model_identity = None
-    identity_field = None
+    model_identity = 'please/set/model_identity'
+    identity_field = 'pk'
 
     @property
     def identity(self):

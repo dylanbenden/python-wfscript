@@ -3,14 +3,14 @@ from ....method.document_loader import load_yaml_document
 
 
 def test_identity_tag():
-    document = '''
+    snippet = '''
     - !IDENTITY
       - !NAMESPACE tests/loading
       - !NAME test_loader
       - !VERSION 1.0
       - !STATUS testing
     '''
-    result = load_yaml_document(document)
+    result = load_yaml_document(snippet)
     id_node = result[TagName.IDENTITY]
     assert id_node.tag == TagName.IDENTITY
     assert id_node.value == {

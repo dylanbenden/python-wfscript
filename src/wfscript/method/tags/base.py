@@ -26,5 +26,23 @@ class YAMLConfigured(object):
     def value(self):
         return self._value
 
-    def render_payload(self, *args, **kwargs):
-        raise NotImplementedError(f'{self.__class__.__name__} must implement render_payload()')
+    def render_from_scalar(self, context, **kwargs):
+        raise NotImplementedError(f'{self.tag} may not be rendered from scalar configuration {self.value}')
+
+    def render_from_list(self, context, **kwargs):
+        raise NotImplementedError(f'{self.tag} may not be rendered from array configuration {self.value}')
+
+    def render_from_dict(self, context, **kwargs):
+        raise NotImplementedError(f'{self.tag} may not be rendered from mapping configuration {self.value}')
+
+    def render_from_tag(self, context, **kwargs):
+        raise NotImplementedError(f'{self.tag} may not be rendered from tag configuration: {self.value.tag}')
+
+    def render(self, context, **kwargs):
+        if isinstance(self.value, dict):
+            return self.render_from_dict(context, **kwargs)
+        elif isinstance(self.value, list):
+            return self.render_from_list(context, **kwargs)
+        elif isinstance(self.value, YAMLConfigured):
+            return self.render_from_tag(context, **kwargs)
+        return self.render_from_scalar(context, **kwargs)

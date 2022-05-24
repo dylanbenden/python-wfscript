@@ -1,6 +1,6 @@
 from ....constants.method import TagName
 from ....method.document_loader import load_yaml_document
-from ....testing import get_empty_context
+from ....testing.context import get_empty_context
 
 
 class BogusObject(object):

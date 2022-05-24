@@ -2,32 +2,15 @@ import pytest
 
 from ....constants.method import TagName
 from ....method.document_loader import _load_yaml
-from ....testing import get_empty_context
-
-
-class BogusObject(object):
-    def __init__(self, value):
-        self.value = value
-        self.identity = value
-
-
-class MockDomain(object):
-    def load_material(self, value):
-        return BogusObject(value)
-
-    def load_materials(self, values):
-        return [BogusObject(v) for v in values]
-
-
-class MockNamespaceRoot(object):
-    domain = MockDomain()
+from ....testing.context import get_empty_context
+from ....testing.mocks import MockIdentifiedObject, get_context_with_mock_domain
 
 
 def test_material_retrieval_singular():
-    obj1 = BogusObject('one')
-    obj2 = BogusObject('two')
-    obj3 = BogusObject('three')
-    obj4 = BogusObject('four')
+    obj1 = MockIdentifiedObject('one')
+    obj2 = MockIdentifiedObject('two')
+    obj3 = MockIdentifiedObject('three')
+    obj4 = MockIdentifiedObject('four')
     context = get_empty_context(
         input_data={
             'key_in_input_only': obj1,
@@ -54,10 +37,10 @@ def test_material_retrieval_singular():
             assert node.render(context).value == expected_object.value
 
 def test_material_retrieval_plural():
-    obj1 = BogusObject('one')
-    obj2 = BogusObject('two')
-    obj3 = BogusObject('three')
-    obj4 = BogusObject('four')
+    obj1 = MockIdentifiedObject('one')
+    obj2 = MockIdentifiedObject('two')
+    obj3 = MockIdentifiedObject('three')
+    obj4 = MockIdentifiedObject('four')
     context = get_empty_context(
         input_data={
             'key_in_input_only': [obj1],
@@ -84,8 +67,8 @@ def test_material_retrieval_plural():
             assert node.render(context)[0].value == expected_object.value
 
 def test_cardinality_checking():
-    obj = BogusObject('one')
-    objs = [BogusObject('two')]
+    obj = MockIdentifiedObject('one')
+    objs = [MockIdentifiedObject('two')]
     context = get_empty_context(
         input_data={
             'singular_obj': obj,
@@ -119,8 +102,7 @@ def test_material_domain_loading():
     plural_mat_ids = ['bogus/system::2', 'bogus/system::3']
     single_mat_name = 'single_mat_id'
     plural_mats_name = 'list_of_mat_ids'
-    context = get_empty_context(
-        namespace_root=MockNamespaceRoot(),
+    context = get_context_with_mock_domain(
         input_data={
             single_mat_name: single_mat_id,
             plural_mats_name: plural_mat_ids
@@ -132,12 +114,12 @@ def test_material_domain_loading():
     '''
     single_mat_node, plural_mat_node = _load_yaml(snippet)
     single_result = single_mat_node.render(context)
-    assert isinstance(single_result, BogusObject) is True
+    assert isinstance(single_result, MockIdentifiedObject) is True
     assert single_result.value == single_mat_id
     assert single_mat_node.render_for_output(context) == single_mat_id
 
     plural_result = plural_mat_node.render(context)
-    assert all([isinstance(item, BogusObject) for item in plural_result])
+    assert all([isinstance(item, MockIdentifiedObject) for item in plural_result])
     assert [item.value for item in plural_result] == plural_mat_ids
     assert plural_mat_node.render_for_output(context) == plural_mat_ids
 
@@ -153,8 +135,7 @@ def test_render_for_output():
     unrendered_plural_mat_ids = ['bogus/system::5', 'bogus/system::6']
     unrendered_plural_mats_name = 'unloaded_list_of_mat_ids'
 
-    context = get_empty_context(
-        namespace_root=MockNamespaceRoot(),
+    context = get_context_with_mock_domain(
         input_data={
             single_mat_name: single_mat_id,
             unrendered_single_mat_name: unrendered_single_mat_id,

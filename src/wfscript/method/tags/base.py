@@ -2,6 +2,8 @@ import yaml
 
 
 class YAMLConfigured(object):
+    construct_value_as_mapping = False
+
     def __init__(self, loader, tag, value):
         self._loader = loader
         self._tag = tag
@@ -12,7 +14,13 @@ class YAMLConfigured(object):
         if isinstance(node, yaml.MappingNode):
             return loader.construct_mapping(node)
         elif isinstance(node, yaml.SequenceNode):
-            return loader.construct_sequence(node)
+            sequence = loader.construct_sequence(node)
+            if cls.construct_value_as_mapping:
+                return {
+                    node.tag: node.value
+                    for node in sequence
+                }
+            return sequence
         elif isinstance(node, yaml.ScalarNode):
             return loader.construct_scalar(node)
         else:

@@ -2,6 +2,7 @@ import pytest
 
 from ....testing_tools.context import get_empty_context
 from ....testing_tools.mocks import MockIdentifiedObject, get_context_with_mock_domain
+from .....constants import ConstantNamespace
 from .....constants.method import TagName
 from .....method.document_loader import load_yaml
 
@@ -97,66 +98,63 @@ def test_cardinality_checking():
         assert f'{plural_tag} expects an array' in str(excinfo)
 
 
-def test_material_domain_loading():
+class MatLoading(ConstantNamespace):
     single_mat_id = 'bogus/system::1'
     plural_mat_ids = ['bogus/system::2', 'bogus/system::3']
     single_mat_name = 'single_mat_id'
     plural_mats_name = 'list_of_mat_ids'
-    context = get_context_with_mock_domain(
-        input_data={
-            single_mat_name: single_mat_id,
-            plural_mats_name: plural_mat_ids
-        }
-    )
-    snippet = f'''
-      - {TagName.Material} {single_mat_name}
-      - {TagName.Materials} {plural_mats_name}
-    '''
-    single_mat_node, plural_mat_node = load_yaml(snippet)
-    single_result = single_mat_node.render(context)
-    assert isinstance(single_result, MockIdentifiedObject) is True
-    assert single_result.value == single_mat_id
-    assert single_mat_node.render_for_output(context) == single_mat_id
-
-    plural_result = plural_mat_node.render(context)
-    assert all([isinstance(item, MockIdentifiedObject) for item in plural_result])
-    assert [item.value for item in plural_result] == plural_mat_ids
-    assert plural_mat_node.render_for_output(context) == plural_mat_ids
-
-
-def test_render_for_output():
-    single_mat_id = 'bogus/system::1'
-    single_mat_name = 'single_mat_id'
-    plural_mat_ids = ['bogus/system::2', 'bogus/system::3']
-    plural_mats_name = 'list_of_mat_ids'
-
     unrendered_single_mat_id = 'bogus/system::4'
     unrendered_single_mat_name = 'unloaded_single_mat_id'
     unrendered_plural_mat_ids = ['bogus/system::5', 'bogus/system::6']
     unrendered_plural_mats_name = 'unloaded_list_of_mat_ids'
 
+
+def test_material_domain_loading():
     context = get_context_with_mock_domain(
         input_data={
-            single_mat_name: single_mat_id,
-            unrendered_single_mat_name: unrendered_single_mat_id,
-            plural_mats_name: plural_mat_ids,
-            unrendered_plural_mats_name: unrendered_plural_mat_ids
+            MatLoading.single_mat_name: MatLoading.single_mat_id,
+            MatLoading.plural_mats_name: MatLoading.plural_mat_ids
         }
     )
     snippet = f'''
-      - {TagName.Material} {single_mat_name}
-      - {TagName.Materials} {plural_mats_name}
-      - {TagName.Material} {unrendered_single_mat_name}
-      - {TagName.Materials} {unrendered_plural_mats_name}
+      - {TagName.Material} {MatLoading.single_mat_name}
+      - {TagName.Materials} {MatLoading.plural_mats_name}
+    '''
+    single_mat_node, plural_mat_node = load_yaml(snippet)
+    single_result = single_mat_node.render(context)
+    assert isinstance(single_result, MockIdentifiedObject) is True
+    assert single_result.value == MatLoading.single_mat_id
+    assert single_mat_node.render_for_output(context) == MatLoading.single_mat_id
+
+    plural_result = plural_mat_node.render(context)
+    assert all([isinstance(item, MockIdentifiedObject) for item in plural_result])
+    assert [item.value for item in plural_result] == MatLoading.plural_mat_ids
+    assert plural_mat_node.render_for_output(context) == MatLoading.plural_mat_ids
+
+
+def test_render_for_output():
+    context = get_context_with_mock_domain(
+        input_data={
+            MatLoading.single_mat_name: MatLoading.single_mat_id,
+            MatLoading.unrendered_single_mat_name: MatLoading.unrendered_single_mat_id,
+            MatLoading.plural_mats_name: MatLoading.plural_mat_ids,
+            MatLoading.unrendered_plural_mats_name: MatLoading.unrendered_plural_mat_ids
+        }
+    )
+    snippet = f'''
+      - {TagName.Material} {MatLoading.single_mat_name}
+      - {TagName.Materials} {MatLoading.plural_mats_name}
+      - {TagName.Material} {MatLoading.unrendered_single_mat_name}
+      - {TagName.Materials} {MatLoading.unrendered_plural_mats_name}
     '''
     single_mat_node, plural_mat_node, unrendered_single_node, unrendered_plural_node = load_yaml(snippet)
 
     # render these first, then render output, get back identity/ies
     single_mat_node.render(context)
-    assert single_mat_node.render_for_output(context) == single_mat_id
+    assert single_mat_node.render_for_output(context) == MatLoading.single_mat_id
     plural_mat_node.render(context)
-    assert plural_mat_node.render_for_output(context) == plural_mat_ids
+    assert plural_mat_node.render_for_output(context) == MatLoading.plural_mat_ids
 
     # don't render these first, then render output, get back identity/ies same as above
-    assert unrendered_single_node.render_for_output(context) == unrendered_single_mat_id
-    assert unrendered_plural_node.render_for_output(context) == unrendered_plural_mat_ids
+    assert unrendered_single_node.render_for_output(context) == MatLoading.unrendered_single_mat_id
+    assert unrendered_plural_node.render_for_output(context) == MatLoading.unrendered_plural_mat_ids

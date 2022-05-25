@@ -10,3 +10,6 @@ class SelectionValueTag(YAMLConfigured):
         # for now, assuming that there is only one input provided
         value = super(SelectionValueTag, cls).construct_value(loader, node)
         return value[0]
+
+    def render_from_scalar(self, _, **__):
+        return self.value

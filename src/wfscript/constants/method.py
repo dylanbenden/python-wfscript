@@ -2,45 +2,56 @@ from . import ConstantNamespace
 
 
 class TagName(ConstantNamespace):
+    # Method interface
     IDENTITY = '!IDENTITY'
     INPUT = '!INPUT'
-    BODY = '!BODY'
     OUTPUT = '!OUTPUT'
 
-    NAMESPACE = '!NAMESPACE'
-    NAME = '!NAME'
-    VERSION = '!VERSION'
-    STATUS = '!STATUS'
+    # Labels
+    namespace = '!namespace'
+    name = '!name'
+    version = '!version'
+    status = '!status'
 
+    # Containers
+    BODY = '!BODY'
+    CHOICES = '!CHOICES'
+    STEPS = '!STEPS'
+    REPEAT = '!REPEAT'
+
+    # Containables
     Action = '!Action'
     Method = '!Method'
     Step = '!Step'
     Ticket = '!Ticket'
+    Choice = '!Choice'
 
+    # Runtime data sources
     State = '!State'
     Input = '!Input'
     Output = '!Output'
-
     Material = '!Material'
     Materials = '!Materials'
     Asset = '!Asset'
     Assets = '!Assets'
+    Item = '!Item'
+    Collection = '!Collection'
 
-    NAMESPACE = '!NAMESPACE'
-    NAME = '!NAME'
-    VERSION = '!VERSION'
-    STATUS = '!STATUS'
+    # Selection
+    SelectionSource = '!SelectionSource'
+    SelectionValue = '!SelectionValue'
 
 
 class MetaStatusChoice(ConstantNamespace):
     PRODUCTION = 'production'
     TESTING = 'testing'
     DEVELOPMENT = 'development'
+    DEPRECATED = 'deprecated'
 
 
 class MethodKeyword(ConstantNamespace):
-    RETURN = 'return'
-    IDENTITY = 'id'
-    BODY = 'body'
-    INPUT = 'input'
+    # RETURN = 'return'
+    # IDENTITY = 'id'
+    # BODY = 'body'
+    # INPUT = 'input'
     OUTPUT_TARGET = 'output>>'

@@ -15,13 +15,12 @@ def _object_constructor(loader, node):
 _loader.add_constructor(None, _object_constructor)
 
 
-def _load_yaml(document):
-    # for testing, mostly
-    return yaml.load(document, Loader=_loader)
+def load_yaml(yaml_format_text):
+    return yaml.load(yaml_format_text, Loader=_loader)
 
 
-def load_yaml_document(document):
+def load_method(yaml_format_text):
     return {
         node.tag: node
-        for node in _load_yaml(document)
+        for node in load_yaml(yaml_format_text)
     }

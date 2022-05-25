@@ -1,8 +1,8 @@
-- !META
-  namespace: content_root/executing
-  name: talent_pipeline
-  version: 1.0
-  status: production
+- !IDENTITY
+  - !namespace content_root/executing
+  - !name talent_pipeline
+  - !version 1.0
+  - !status production
 
 - !INPUT
   first_name:
@@ -22,16 +22,17 @@
     name: create_candidate_profile
     body:
       - !State
-        first_name: !Input first_name
-        last_name: !Input last_name
-        personal_email: !Input personal_email
+          first_name: !Input first_name
+          last_name: !Input last_name
+          personal_email: !Input personal_email
       - !Action
-        id: content_root/executing::add_prospect==production
-        input:
-          first_name: !State first_name
-          last_name: !State last_name
-          email: !State personal_email
-        output>>: !State user_name
+        - !IDENTITY content_root/executing::add_prospect==production
+        - !INPUT
+            first_name: !State first_name
+            last_name: !State last_name
+            email: !State personal_email
+        - !OUTPUT
+            output>>: !State user_name
     return:
       first_name: !State first_name
       last_name: !State last_name
@@ -41,12 +42,13 @@
     name: send_hire_letter
     body:
       - !Action
-        id: content_root/executing::send_hire_letter==production
-        input:
+        - !IDENTITY content_root/executing::send_hire_letter==production
+        - !INPUT
           first_name: !State first_name
           last_name: !State last_name
           email: !State personal_email
-        output>>: !State acceptance_code
+        - !OUTPUT
+            output>>: !State acceptance_code
     return:
       user_name: !State user_name
       acceptance_code: !State acceptance_code
@@ -59,12 +61,13 @@
         required: true
     body:
       - !Action
-        id: content_root/executing::accept_offer==production
-        input:
-          user_name: !State user_name
-          acceptance_code_generated: !State acceptance_code
-          acceptance_code_provided: !Input acceptance_code
-        output>>: !Output enrollment_message
+        - !IDENTITY content_root/executing::accept_offer==production
+        - !INPUT
+            user_name: !State user_name
+            acceptance_code_generated: !State acceptance_code
+            acceptance_code_provided: !Input acceptance_code
+        - !OUTPUT
+            output>>: !Output enrollment_message
 
 - !RETURN
   user_name: !State user_name

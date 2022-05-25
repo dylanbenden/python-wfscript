@@ -1,21 +1,44 @@
-from .tags.choice import ChoiceTag
-from .tags.container import StepTag, BodySectionTag, ForEachTag
-from .tags.data_source import InputTag, StateTag, OutputTag
-from .tags.executors import ActionTag, MethodTag, TicketTag
-from .tags.identity import IdentitySectionTag
-from .tags.input import InputSectionTag
-from .tags.labels import NamespaceTag, NameTag, VersionTag, StatusTag
-from .tags.materials import MaterialTag, MaterialsTag, AssetTag, AssetsTag
-from .tags.output import OutputSectionTag
+from .tags import container
+from .tags import data_source
+from .tags import executors
+from .tags import interface
+from .tags import labels
+from .tags import selection
 
 constructor_for_tag = {
     tag.tag_name: tag
     for tag in [
-        IdentitySectionTag, InputSectionTag, BodySectionTag, OutputSectionTag,
-        NamespaceTag, NameTag, VersionTag, StatusTag,
-        ActionTag, MethodTag, StepTag, TicketTag,
-        InputTag, OutputTag, StateTag,
-        MaterialTag, MaterialsTag, AssetTag, AssetsTag,
-        ChoiceTag, ForEachTag,
+        interface.IdentitySectionTag,
+        interface.InputSectionTag,
+        interface.OutputSectionTag,
+
+        labels.NamespaceTag,
+        labels.NameTag,
+        labels.VersionTag,
+        labels.StatusTag,
+
+        container.BodySectionTag,
+        container.ChoicesSectionTag,
+        container.StepsSectionTag,
+        container.RepeatSectionTag,
+        container.ChoiceTag,
+
+        executors.ActionTag,
+        executors.MethodTag,
+        executors.TicketTag,
+        executors.StepTag,
+
+        data_source.StateTag,
+        data_source.InputTag,
+        data_source.OutputTag,
+        data_source.ItemTag,
+        data_source.CollectionTag,
+        data_source.MaterialTag,
+        data_source.MaterialsTag,
+        data_source.AssetTag,
+        data_source.AssetsTag,
+
+        selection.SelectionSourceTag,
+        selection.SelectionValueTag,
     ]
 }

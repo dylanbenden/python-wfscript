@@ -1,7 +1,7 @@
 from copy import deepcopy
 
+from .utils.json import unfloat
 from ..constants.payload import PayloadKey
-from ..utils.json import unfloat
 
 
 class BaseRuntimeData(object):

@@ -1,5 +1,7 @@
 import yaml
 
+from ...constants.method import TagName
+
 
 class YAMLConfigured(object):
     construct_value_as_mapping = False
@@ -23,6 +25,12 @@ class YAMLConfigured(object):
             return sequence
         elif isinstance(node, yaml.ScalarNode):
             return loader.construct_scalar(node)
+        elif isinstance(node, YAMLConfigured):
+            import ipdb; ipdb.set_trace()
+            pass
+        # elif isinstance(node, YAMLConfigured):
+        #     import ipdb; ipdb.set_trace()
+        #     pass
         else:
             raise RuntimeError(f'Unexpected node type: {node}')
 

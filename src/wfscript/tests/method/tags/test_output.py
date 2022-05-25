@@ -37,6 +37,11 @@ def test_output_tag():
         }
     )
     snippet = f'''
+      - {TagName.Material} {single_mat_name}
+      - {TagName.Materials} {plural_mats_name}
+      - {TagName.Material} {unrendered_single_mat_name}
+      - {TagName.Materials} {unrendered_plural_mats_name}
+
       - {TagName.OUTPUT}
         {plain_scalar_output_key}: {plain_scalar_value}
         {plain_scalar_input_output_key}: {TagName.Input} {plain_scalar_input_name}
@@ -45,8 +50,14 @@ def test_output_tag():
         {unrendered_single_mat_output_key}: {TagName.Material} {unrendered_single_mat_name}
         {unrendered_plural_mats_output_key}: {TagName.Materials} {unrendered_plural_mats_name}
     '''
-    output_node = _load_yaml(snippet)[0]
-    assert output_node.tag_name == TagName.OUTPUT
+    nodes = _load_yaml(snippet)
+    # first, render *some* materials to show prior rendering has no effect on output
+    mat_nodes_to_render = nodes[:4]
+    for to_render in mat_nodes_to_render:
+        to_render.render(context)
+
+    # render output and verify returned results
+    output_node = nodes[4]
     result = output_node.render(context)
     assert result[plain_scalar_output_key] == plain_scalar_value
     assert result[plain_scalar_input_output_key] == plain_scalar_input_value

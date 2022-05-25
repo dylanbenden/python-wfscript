@@ -5,6 +5,7 @@ from .tags.executors import ActionTag, MethodTag, TicketTag
 from .tags.identity import IdentitySectionTag
 from .tags.input import InputSectionTag
 from .tags.labels import NamespaceTag, NameTag, VersionTag, StatusTag
+from .tags.materials import MaterialTag, MaterialsTag, AssetTag, AssetsTag
 from .tags.output import OutputSectionTag
 
 constructor_for_tag = {
@@ -14,6 +15,7 @@ constructor_for_tag = {
         NamespaceTag, NameTag, VersionTag, StatusTag,
         ActionTag, MethodTag, StepTag, TicketTag,
         InputTag, OutputTag, StateTag,
+        MaterialTag, MaterialsTag, AssetTag, AssetsTag,
         ChoiceTag, ForEachTag,
     ]
 }

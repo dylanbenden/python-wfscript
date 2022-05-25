@@ -54,3 +54,6 @@ class YAMLConfigured(object):
         elif isinstance(self.value, YAMLConfigured):
             return self.render_from_tag(context, **kwargs)
         return self.render_from_scalar(context, **kwargs)
+
+    def render_for_output(self, context):
+        return self.render(context)

@@ -1,6 +1,7 @@
 from ...constants.payload import PayloadKey
 from ...runtime.context import RunContext
 from ...runtime.data import Input
+from ...runtime.output import MethodReturn
 
 
 class ValueAssignableObject(object):
@@ -28,7 +29,10 @@ class MockMethodExecutor(object):
         self.identity = identity
 
     def run_from_tag(self, context, output_target):
-        return {'mock_result': f'Mock executor {self.identity} run, output_target: {output_target}'}
+        return MethodReturn(
+            result=f'Mock-executed {self.identity}',
+            context=context
+        )
 
 
 class MockNamespaceRoot(object):
@@ -41,7 +45,7 @@ class MockNamespaceRoot(object):
         return MockMethodExecutor(identity)
 
 
-def get_context_with_mock_domain(input_data=None, state=None):
+def get_context_with_mocks(input_data=None, state=None):
     return RunContext(
         state=state,
         namespace_root=MockNamespaceRoot(),

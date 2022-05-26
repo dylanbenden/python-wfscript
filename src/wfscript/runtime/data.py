@@ -62,6 +62,8 @@ class State(BaseRuntimeData):
             PayloadKey.STEP: self.last_step
         }
 
-    def set_resume_state(self, method, step):
-        self._last_method = method
-        self._last_step = step
+    def set_resume_state(self, method=None, step=None):
+        if method is not None:
+            self._last_method = method
+        if step is not None:
+            self._last_step = step

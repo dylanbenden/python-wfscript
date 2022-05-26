@@ -1,4 +1,4 @@
-from ....testing_tools.mocks import get_context_with_mock_domain
+from ....testing_tools.mocks import get_context_with_mocks
 from .....constants import ConstantNamespace
 from .....constants.method import TagName
 from .....method.document_loader import load_yaml
@@ -40,7 +40,7 @@ class UnrenderedPluralMats(ConstantNamespace):
 
 
 def test_output_tag():
-    context = get_context_with_mock_domain(
+    context = get_context_with_mocks(
         input_data={
             ScalarInput.name: ScalarInput.value,
             SingleMat.name: SingleMat.id,

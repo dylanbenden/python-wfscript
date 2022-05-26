@@ -1,6 +1,7 @@
-from ....testing_tools.mocks import get_context_with_mock_domain
+from ....testing_tools.mocks import get_context_with_mocks
 from .....constants.method import TagName
 from .....method.document_loader import load_yaml
+from .....runtime.output import MethodReturn
 
 
 def test_choices_tag():
@@ -29,7 +30,7 @@ def test_choices_tag():
             - {TagName.Method}
               - {TagName.IDENTITY} {alternate_method_id}
     '''
-    context = get_context_with_mock_domain(
+    context = get_context_with_mocks(
         input_data={
             data_source_key: user_selection_value
         }
@@ -52,14 +53,16 @@ def test_choices_tag():
     second_method_node = second_body_node[0]
     assert second_method_node.identity == alternate_method_id
 
-    results = choices_node.render(context)
-    assert results[0]['mock_result'] == f'Mock executor {selected_method_id} run, output_target: None'
+    first_results = choices_node.render(context)[0]
+    assert isinstance(first_results, MethodReturn) is True
+    assert first_results.result == f'Mock-executed {selected_method_id}'
 
     # make alternate selection
-    alt_context = get_context_with_mock_domain(
+    alt_context = get_context_with_mocks(
         input_data={
             data_source_key: alternate_user_selection_value
         }
     )
-    results = choices_node.render(alt_context)
-    assert results[0]['mock_result'] == f'Mock executor {alternate_method_id} run, output_target: None'
+    alt_results = choices_node.render(alt_context)[0]
+    assert isinstance(alt_results, MethodReturn) is True
+    assert alt_results.result == f'Mock-executed {alternate_method_id}'

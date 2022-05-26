@@ -4,19 +4,12 @@ from ....runtime.utils.identity import construct_identity
 
 
 class ExecutorTag(YAMLConfigured):
-    # return_klass = None
     tag_name = None
     construct_value_as_mapping = True
-    # execute_method = None
-    # return_value = None
 
     @property
     def identity(self):
-        try:
-            identity_info = self._value[TagName.IDENTITY]
-        except:
-            import ipdb; ipdb.set_trace()
-            pass
+        identity_info = self._value[TagName.IDENTITY]
         if isinstance(identity_info, dict):
             return construct_identity(identity_info)
         return identity_info

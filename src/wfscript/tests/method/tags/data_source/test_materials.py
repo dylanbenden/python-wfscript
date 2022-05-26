@@ -1,7 +1,7 @@
 import pytest
 
 from ....testing_tools.context import get_empty_context
-from ....testing_tools.mocks import MockIdentifiedObject, get_context_with_mock_domain
+from ....testing_tools.mocks import MockIdentifiedObject, get_context_with_mocks
 from .....constants import ConstantNamespace
 from .....constants.method import TagName
 from .....method.document_loader import load_yaml
@@ -110,7 +110,7 @@ class MatLoading(ConstantNamespace):
 
 
 def test_material_domain_loading():
-    context = get_context_with_mock_domain(
+    context = get_context_with_mocks(
         input_data={
             MatLoading.single_mat_name: MatLoading.single_mat_id,
             MatLoading.plural_mats_name: MatLoading.plural_mat_ids
@@ -133,7 +133,7 @@ def test_material_domain_loading():
 
 
 def test_render_for_output():
-    context = get_context_with_mock_domain(
+    context = get_context_with_mocks(
         input_data={
             MatLoading.single_mat_name: MatLoading.single_mat_id,
             MatLoading.unrendered_single_mat_name: MatLoading.unrendered_single_mat_id,

@@ -18,9 +18,7 @@ class RunContext(object):
             self._state = State()
         self._runtime = dict()
         self._last_step = resume_info
-        self._run_id = request.get('run_id', str(uuid.uuid4()))
-        # if not skip_validation:
-        #     self.validate_input()
+        self._debug = list()
 
     @property
     def method(self):
@@ -55,16 +53,14 @@ class RunContext(object):
         return self._last_step
 
     @property
-    def run_id(self):
-        return self._run_id
+    def debug(self):
+        return self._debug
 
     def update_runtime(self, data):
         self._runtime.update(data)
 
-    # probably not the correct moment to do validation
-    # def validate_input(self):
-    #     validator = self.namespace_root.get_validator(self.method, self.last_step)
-    #     validator.validate(self.input.value)
+    def append_debug(self, result):
+        self._debug.append(result)
 
 
 def get_context(identity, namespace_root, input_data=None, state=None, resume_info=None, skip_validation=False):

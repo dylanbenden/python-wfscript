@@ -11,4 +11,4 @@ class ActionTag(ExecutorTag):
 
     def execute(self, context):
         executor = context.namespace_root.get_action(self.identity)
-        return ActionReturn(executor(**self.input), context)
+        return ActionReturn(executor(**self.input))

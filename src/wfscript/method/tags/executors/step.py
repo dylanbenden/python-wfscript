@@ -5,7 +5,7 @@ from ....runtime.output import StepReturn
 
 class StepTag(ExecutorTag):
     tag_name = TagName.Step
-    construct_value_as_tag_mapping = True
+    label_child_tags = True
     permitted_contents = [TagName.Method, TagName.Step, TagName.Action, TagName.State]
 
     @property

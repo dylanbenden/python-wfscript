@@ -5,7 +5,7 @@ from ....runtime.context import get_inner_context
 
 class MethodTag(ExecutorTag):
     tag_name = TagName.Method
-    construct_value_as_mapping = True
+    use_child_tags_as_labels = True
 
 
     def execute(self, context):

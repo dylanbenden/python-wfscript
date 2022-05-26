@@ -6,7 +6,7 @@ from ....runtime.utils.identity import deconstruct_identity
 
 class IdentitySectionTag(YAMLConfigured):
     tag_name = TagName.IDENTITY
-    construct_value_as_mapping = True
+    use_child_tags_as_labels = True
 
     @classmethod
     def construct_value(cls, loader, node):

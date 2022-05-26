@@ -27,6 +27,7 @@ constructor_for_tag = {
         executors.MethodTag,
         executors.TicketTag,
         executors.StepTag,
+        executors.VerifyTag,
 
         data_source.StateTag,
         data_source.InputTag,

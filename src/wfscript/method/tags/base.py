@@ -1,10 +1,10 @@
 import yaml
 
-from ...constants.method import TagName
-
 
 class YAMLConfigured(object):
-    construct_value_as_mapping = False
+    use_child_tags_as_labels = False
+    label_child_tags = False
+
 
     def __init__(self, loader, tag, value):
         self._loader = loader
@@ -12,25 +12,30 @@ class YAMLConfigured(object):
         self._value = value
 
     @classmethod
+    def handle_child_tags(cls, sequence):
+        if cls.label_child_tags:
+            return {
+                node.tag: node
+                for node in sequence
+            }
+        elif cls.use_child_tags_as_labels:
+            return {
+                node.tag: node.value
+                for node in sequence
+            }
+        return sequence
+
+    @classmethod
     def construct_value(cls, loader, node):
         if isinstance(node, yaml.MappingNode):
             return loader.construct_mapping(node)
         elif isinstance(node, yaml.SequenceNode):
             sequence = loader.construct_sequence(node)
-            if cls.construct_value_as_mapping:
-                return {
-                    node.tag: node.value
-                    for node in sequence
-                }
+            if all(isinstance(item, YAMLConfigured) for item in sequence):
+                sequence = cls.handle_child_tags(sequence)
             return sequence
         elif isinstance(node, yaml.ScalarNode):
             return loader.construct_scalar(node)
-        elif isinstance(node, YAMLConfigured):
-            import ipdb; ipdb.set_trace()
-            pass
-        # elif isinstance(node, YAMLConfigured):
-        #     import ipdb; ipdb.set_trace()
-        #     pass
         else:
             raise RuntimeError(f'Unexpected node type: {node}')
 

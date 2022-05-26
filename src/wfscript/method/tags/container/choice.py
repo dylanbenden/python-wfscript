@@ -4,7 +4,7 @@ from ....constants.method import TagName
 
 class ChoiceTag(ContainerTag):
     tag_name = TagName.Choice
-    construct_value_as_mapping = True
+    use_child_tags_as_labels = True
 
     @property
     def body(self):

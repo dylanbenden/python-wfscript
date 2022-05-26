@@ -25,6 +25,7 @@ class TagName(ConstantNamespace):
     Step = '!Step'
     Ticket = '!Ticket'
     Choice = '!Choice'
+    Verify = '!Verify'
 
     # Runtime data sources
     State = '!State'

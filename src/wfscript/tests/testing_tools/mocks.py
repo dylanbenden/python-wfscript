@@ -1,7 +1,7 @@
 from ...constants.payload import PayloadKey
 from ...runtime.context import RunContext
 from ...runtime.data import Input
-from ...runtime.output import MethodReturn
+from ...runtime.output import MethodReturn, TicketReturn
 
 
 class ValueAssignableObject(object):
@@ -20,8 +20,11 @@ class MockDomain(object):
     def load_material(self, identity):
         return MockIdentifiedObject(identity)
 
-    def load_materials(self, values):
-        return [MockIdentifiedObject(v) for v in values]
+    def load_materials(self, identities):
+        return [MockIdentifiedObject(identity) for identity in identities]
+
+    def add_ticket(self, identity, input_data):
+        return TicketReturn(f'Ticket mock-created for {identity} with input {input_data}')
 
 
 class MockMethodExecutor(object):

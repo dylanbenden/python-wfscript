@@ -4,13 +4,8 @@ from ..constants.payload import PayloadKey
 
 
 class ExecutorReturn(object):
-    def __init__(self, result, context):
+    def __init__(self, result):
         self._result = result
-        resume_info = context.state.resume_info
-        if resume_info.get(PayloadKey.METHOD) and resume_info.get(PayloadKey.STEP):
-            self._resume = resume_info
-        else:
-            self._resume = dict()
 
     @property
     def result(self):
@@ -29,6 +24,16 @@ class ExecutorReturn(object):
 
 
 class MethodReturn(ExecutorReturn):
+    def __init__(self, result, context):
+        super(MethodReturn, self).__init__(result)
+        resume_info = context.state.resume_info
+        if resume_info.get(PayloadKey.METHOD) and resume_info.get(PayloadKey.STEP):
+            self._resume = resume_info
+        else:
+            self._resume = dict()
+
+
+class StepReturn(MethodReturn):
     pass
 
 
@@ -36,5 +41,5 @@ class ActionReturn(ExecutorReturn):
     pass
 
 
-class StepReturn(ExecutorReturn):
+class TicketReturn(ExecutorReturn):
     pass

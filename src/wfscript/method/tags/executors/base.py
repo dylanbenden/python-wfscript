@@ -5,7 +5,7 @@ from ....runtime.utils.identity import construct_identity
 
 class ExecutorTag(YAMLConfigured):
     tag_name = None
-    construct_value_as_mapping = True
+    use_child_tags_as_labels = True
 
     @property
     def identity(self):

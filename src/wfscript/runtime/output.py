@@ -13,7 +13,7 @@ class ExecutorReturn(object):
 
     @property
     def resume(self):
-        return self._resume
+        return dict()
 
     def render(self):
         return {
@@ -24,17 +24,22 @@ class ExecutorReturn(object):
 
 
 class MethodReturn(ExecutorReturn):
-    def __init__(self, result, context):
-        super(MethodReturn, self).__init__(result)
-        resume_info = context.state.resume_info
-        if resume_info.get(PayloadKey.METHOD) and resume_info.get(PayloadKey.STEP):
-            self._resume = resume_info
-        else:
-            self._resume = dict()
-
+    pass
 
 class StepReturn(MethodReturn):
-    pass
+    _method = None
+    _step = None
+
+    @property
+    def resume(self):
+        return {
+            PayloadKey.METHOD: self._method,
+            PayloadKey.STEP: self._step
+        }
+
+    def add_step_resume_info(self, method, step):
+        self._method = method
+        self._step = step
 
 
 class ActionReturn(ExecutorReturn):

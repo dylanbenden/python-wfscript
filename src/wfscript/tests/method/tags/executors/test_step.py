@@ -39,12 +39,12 @@ def test_step_tag_output():
     # verify methods render individually
     first_output = first_method_node.render(context)
     assert isinstance(first_output, MethodReturn) is True
-    assert first_output.result == f'Mock-executed {TestParam.first_method_id}'
+    assert first_output.result == f'Mock-executed method {TestParam.first_method_id}'
     assert first_output.resume == dict()
 
     second_output = second_method_node.render(context)
     assert isinstance(second_output, MethodReturn) is True
-    assert second_output.result == f'Mock-executed {TestParam.second_method_id}'
+    assert second_output.result == f'Mock-executed method {TestParam.second_method_id}'
     assert second_output.resume == dict()
 
     step_result = node.render(context)

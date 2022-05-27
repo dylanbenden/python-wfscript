@@ -6,18 +6,16 @@ class ChoicesSectionTag(ContainerTag):
     tag_name = TagName.CHOICES
     permitted_contents = [TagName.Method, TagName.Step, TagName.Action, TagName.State]
 
-    def select_choice_body(self, runtime_selection):
-        options = {
-            option.value[TagName.SelectionValue]: option.value[TagName.BODY]
-            for option in self.value[1:]
-        }
-        if runtime_selection in options:
-            return options[runtime_selection]
-        raise RuntimeError(f'No choice defined for "{runtime_selection}"; Valid options: {list(options.keys())}')
+    def select_choice(self, runtime_selection):
+        options = list()
+        for choice in self.value[1:]:
+            options.append(choice.selection_value)
+            if choice.selection_value == runtime_selection:
+                return choice
+        raise RuntimeError(f'No choice defined matching selection "{runtime_selection}"; '
+                           f'Valid options: {options}')
 
     def render_from_list(self, context, **kwargs):
         runtime_selection = self.value[0].render(context)
-        return [
-            item.render(context)
-            for item in self.select_choice_body(runtime_selection)
-        ]
+        choice_for_selection = self.select_choice(runtime_selection)
+        return choice_for_selection.render(context)

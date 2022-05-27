@@ -4,8 +4,11 @@ from ....constants.method import TagName
 
 class ChoiceTag(ContainerTag):
     tag_name = TagName.Choice
-    use_child_tags_as_labels = True
+    label_child_tags = True
 
     @property
-    def body(self):
-        return self.value[TagName.BODY]
+    def selection_value(self):
+        return self.value[TagName.SelectionValue].value
+
+    def render_from_dict(self, context, **kwargs):
+        return self.value[TagName.BODY].render(context)

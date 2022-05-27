@@ -17,7 +17,7 @@ class DataSourceTag(YAMLConfigured):
         if len(elements_to_traverse) > 1:
             additional_names = '.'.join(elements_to_traverse[1:])
         if item is None:
-            item = data_source[current_name]
+            item = data_source.value[current_name]
         else:
             if isinstance(item, dict):
                 item = item[current_name]

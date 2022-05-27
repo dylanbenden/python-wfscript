@@ -6,4 +6,4 @@ class CollectionTag(YAMLConfigured):
     tag_name = TagName.Collection
 
     def render(self, context, **kwargs):
-        raise NotImplementedError('not sure we will use this')
+        return self.value[0].render(context)

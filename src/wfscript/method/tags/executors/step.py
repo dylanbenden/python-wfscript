@@ -28,8 +28,6 @@ class StepTag(ExecutorTag):
         context.append_debug(self.body.render(context))
         if self.output:
             result = self.output.render(context)
-            context.state.set_resume_state(step=self.name)
-            return StepReturn(result, context)
-        context.state.set_resume_state(step=self.name)
-        return StepReturn({}, context)
+            return StepReturn(result)
+        return StepReturn({})
 

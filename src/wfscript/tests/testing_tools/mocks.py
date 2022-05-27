@@ -27,15 +27,22 @@ class MockDomain(object):
         return TicketReturn(f'Ticket mock-created for {identity} with input {input_data}')
 
 
-class MockMethodExecutor(object):
+class MockExecutor(object):
     def __init__(self, identity):
         self.identity = identity
 
+
+class MockMethodExecutor(MockExecutor):
     def run_from_tag(self, context, output_target):
+
         return MethodReturn(
-            result=f'Mock-executed {self.identity}',
-            context=context
+            result=f'Mock-executed method {self.identity}'
         )
+
+
+class MockActionExecutor(MockMethodExecutor):
+    def __call__(self, *args, **kwargs):
+        return f'Mock-executed action {self.identity}'
 
 
 class MockNamespaceRoot(object):
@@ -47,13 +54,18 @@ class MockNamespaceRoot(object):
         self.retrieved_methods.append(identity)
         return MockMethodExecutor(identity)
 
+    def get_action(self, identity):
+        self.executed_methods.append(identity)
+        return MockActionExecutor(identity)
 
-def get_context_with_mocks(input_data=None, state=None):
+
+def get_context_with_mocks(input_data=None, state=None, resume_info=None, method=None):
     return RunContext(
         state=state,
         namespace_root=MockNamespaceRoot(),
         request={
             PayloadKey.INPUT: Input(input_data or dict()),
-            PayloadKey.METHOD: 'bogus/namespace::bogus_method==production'
-        }
+            PayloadKey.METHOD: method or 'bogus/namespace::bogus_method==production'
+        },
+        resume_info=resume_info
     )

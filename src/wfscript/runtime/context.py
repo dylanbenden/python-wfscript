@@ -17,7 +17,7 @@ class RunContext(object):
         else:
             self._state = State()
         self._runtime = dict()
-        self._last_step = resume_info
+        self._resume_info = resume_info or dict()
         self._debug = list()
 
     @property
@@ -49,8 +49,8 @@ class RunContext(object):
         return self._runtime
 
     @property
-    def last_step(self):
-        return self._last_step
+    def resume_info(self):
+        return self._resume_info
 
     @property
     def debug(self):

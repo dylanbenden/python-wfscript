@@ -21,6 +21,13 @@ class MockIdentifiedObject(WorkflowMaterial):
         return self.mock_identity
 
 
+class MockMaterial(WorkflowMaterial):
+    model_identity = 'bogus/material'
+
+    def __init__(self, pk):
+        self.pk = pk
+
+
 class MockDomain(object):
     def load_material(self, identity):
         return MockIdentifiedObject(identity)

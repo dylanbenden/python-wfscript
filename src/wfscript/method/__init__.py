@@ -33,6 +33,7 @@ node_for_tag = {
         data_source.InputNode,
         data_source.OutputNode,
         data_source.ItemNode,
+        data_source.CollectionNode,
         data_source.MaterialTag,
         data_source.MaterialsTag,
 

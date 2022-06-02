@@ -1,6 +1,6 @@
 import uuid
 
-from .data import Output, State, Input
+from .data import Output, State, Input, Item
 from ..constants.payload import PayloadKey
 
 
@@ -9,6 +9,7 @@ class RunContext(object):
         self._namespace_root = namespace_root
         self._request = request
         self._output = Output()
+        self._item = Item()
         if state is not None:
             if isinstance(state, State):
                 self._state = state
@@ -41,6 +42,10 @@ class RunContext(object):
         return self._output
 
     @property
+    def item(self):
+        return self._item
+
+    @property
     def state(self):
         return self._state
 
@@ -58,6 +63,9 @@ class RunContext(object):
 
     def set_output(self, value):
         self._output.set(value)
+
+    def set_item(self, value):
+        self._item.set(value)
 
     def update_runtime(self, data):
         self._runtime.update(data)

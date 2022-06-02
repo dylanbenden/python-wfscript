@@ -50,5 +50,11 @@ class Output(BaseRuntimeData):
     # non-persisted collector for data generated at runtime
     pass
 
+
+class Item(BaseRuntimeData):
+    # non-persisted collector for holding the "iter item" in a loop iteration
+    pass
+
+
 class State(BaseRuntimeData):
     pass

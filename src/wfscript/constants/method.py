@@ -33,8 +33,6 @@ class TagName(ConstantNamespace):
     Output = '!Output'
     Material = '!Material'
     Materials = '!Materials'
-    Asset = '!Asset'
-    Assets = '!Assets'
     Item = '!Item'
     Collection = '!Collection'
 
@@ -48,11 +46,3 @@ class MetaStatusChoice(ConstantNamespace):
     TESTING = 'testing'
     DEVELOPMENT = 'development'
     DEPRECATED = 'deprecated'
-
-
-class MethodKeyword(ConstantNamespace):
-    # RETURN = 'return'
-    # IDENTITY = 'id'
-    # BODY = 'body'
-    # INPUT = 'input'
-    OUTPUT_TARGET = 'output>>'

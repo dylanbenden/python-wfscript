@@ -136,14 +136,3 @@ class MaterialsTag(ObjectManagingNode):
             ]
         return result
 
-#
-# class AssetTag(ObjectManagingNode):
-#     tag_name = TagName.Asset
-#     is_read_only = True
-#     is_plural = False
-#
-#
-# class AssetsTag(ObjectManagingNode):
-#     tag_name = TagName.Assets
-#     is_read_only = True
-#     is_plural = True

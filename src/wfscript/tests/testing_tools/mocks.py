@@ -1,6 +1,7 @@
 from ...constants.payload import PayloadKey
 from ...runtime.context import RunContext
 from ...runtime.data import Input
+from ...runtime.materials import WorkflowMaterial
 from ...runtime.output import MethodReturn, TicketReturn
 
 
@@ -10,10 +11,14 @@ class ValueAssignableObject(object):
             setattr(self, key, value)
 
 
-class MockIdentifiedObject(object):
+class MockIdentifiedObject(WorkflowMaterial):
     def __init__(self, identity):
-        self.identity = identity
+        self.mock_identity = identity
         self.value = identity
+
+    @property
+    def identity(self):
+        return self.mock_identity
 
 
 class MockDomain(object):
@@ -33,8 +38,7 @@ class MockExecutor(object):
 
 
 class MockMethodExecutor(MockExecutor):
-    def run_from_tag(self, context, output_target):
-
+    def execute(self, context):
         return MethodReturn(
             result=f'Mock-executed method {self.identity}'
         )

@@ -14,4 +14,4 @@ def get_empty_context(input_data=None, state=None):
 
 
 def get_execution_context(identity, namespace_root, **kwargs):
-    return get_context(identity, namespace_root, skip_validation=True, **kwargs)
+    return get_context(identity, namespace_root, **kwargs)

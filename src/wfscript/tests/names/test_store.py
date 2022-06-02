@@ -1,5 +1,5 @@
 from ..content_root.loading import loading_namespace_root
-from ...names.store import NameStore
+from ...runtime.store import NameStore
 
 
 def test_exists():

@@ -1,7 +1,7 @@
 import decimal
 
 from ...constants.validation import DataType, ValidatorKeyword
-from ...method.tags.base import YAMLConfigured
+from ...method.nodes.base import WorkflowNode
 
 
 def validate_input(spec_part, data_part, namespace_root):
@@ -107,7 +107,7 @@ def _validate_scalar(spec_part, data_part):
 
 
 def _validate_list(spec_part, data_part, ns_root):
-    if isinstance(spec_part, YAMLConfigured):
+    if isinstance(spec_part, WorkflowNode):
         import ipdb; ipdb.set_trace()
     min_size = int_or_none(spec_part.get(ValidatorKeyword.MIN_SIZE))
     max_size = int_or_none(spec_part.get(ValidatorKeyword.MAX_SIZE))
@@ -122,7 +122,7 @@ def _validate_list(spec_part, data_part, ns_root):
     if member_spec is not None and 'id' in member_spec:
         validator = ns_root.get_validator(member_spec['id'])
         map(validator.validate, data_part)
-    else:
+    elif member_data_type:
         if member_data_type == DataType.OBJECT:
             _ = [_validate_dict(member_spec, member, ns_root) for member in data_part]
         elif member_data_type == DataType.ARRAY:

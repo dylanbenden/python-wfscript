@@ -41,6 +41,9 @@ class StepReturn(MethodReturn):
         self._method = method
         self._step = step
 
+    def set_result(self, result):
+        self._result = result
+
 
 class ActionReturn(ExecutorReturn):
     pass

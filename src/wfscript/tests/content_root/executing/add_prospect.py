@@ -1,4 +1,4 @@
-from ....names.decorators import action_identity
+from ....runtime.decorators import action_identity
 
 
 @action_identity('content_root/executing::add_prospect==production')

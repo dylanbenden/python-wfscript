@@ -56,6 +56,9 @@ class RunContext(object):
     def debug(self):
         return self._debug
 
+    def set_output(self, value):
+        self._output.set(value)
+
     def update_runtime(self, data):
         self._runtime.update(data)
 
@@ -63,7 +66,7 @@ class RunContext(object):
         self._debug.append(result)
 
 
-def get_context(identity, namespace_root, input_data=None, state=None, resume_info=None, skip_validation=False):
+def get_context(identity, namespace_root, input_data=None, state=None, resume_info=None):
     if input_data is None:
         input_data = dict()
     if state is None:
@@ -76,8 +79,7 @@ def get_context(identity, namespace_root, input_data=None, state=None, resume_in
         namespace_root=namespace_root,
         request=request,
         resume_info=resume_info,
-        state=state,
-        skip_validation=skip_validation
+        state=state
     )
 
 def get_inner_context(new_identity, old_context, input_data):

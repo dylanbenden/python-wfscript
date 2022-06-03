@@ -1,5 +1,6 @@
 from ...constants.method import TagName
 from ...constants.identity import IdentityDelimeter, DocumentStatus
+from ...method.nodes.labels.base import LabelNode
 
 
 def deconstruct_identity(identity):
@@ -22,17 +23,22 @@ def deconstruct_identity(identity):
 
 def construct_identity(meta_values):
     if TagName.version in meta_values:
-        version = str(meta_values[TagName.version])
+        version_or_status = TagName.version
     else:
-        try:
-            version = meta_values[TagName.status]
-        except:
-            import ipdb; ipdb.set_trace()
-            pass
-    return '{namespace}{namespace_delim}{method}{version_delim}{version}'.format(
-        namespace=meta_values[TagName.namespace],
-        namespace_delim=IdentityDelimeter.NAMESPACE,
-        method=meta_values[TagName.name],
-        version_delim=IdentityDelimeter.VERSION,
-        version=version,
-    )
+        version_or_status = TagName.status
+    if all(isinstance(item, LabelNode) for item in meta_values.values()):
+        return '{namespace}{namespace_delim}{method}{version_delim}{version}'.format(
+            namespace=meta_values[TagName.namespace].value,
+            namespace_delim=IdentityDelimeter.NAMESPACE,
+            method=meta_values[TagName.name].value,
+            version_delim=IdentityDelimeter.VERSION,
+            version=str(meta_values[version_or_status].value),
+        )
+    else:
+        return '{namespace}{namespace_delim}{method}{version_delim}{version}'.format(
+            namespace=meta_values[TagName.namespace],
+            namespace_delim=IdentityDelimeter.NAMESPACE,
+            method=meta_values[TagName.name],
+            version_delim=IdentityDelimeter.VERSION,
+            version=str(meta_values[version_or_status]),
+        )

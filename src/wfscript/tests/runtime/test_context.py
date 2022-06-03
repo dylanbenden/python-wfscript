@@ -1,55 +1,21 @@
-import pytest
-
-from ..content_root.onboarding import onboarding_namespace_root
-from ...constants.payload import PayloadKey
+from ...constants import ConstantNamespace
 from ...runtime.context import RunContext
-from ...runtime.data import BaseRuntimeData
 
 
-def test_context_properties():
-    method_identity = 'onboarding/hr::add_person==1.0'
-    data_provided = BaseRuntimeData({
-        'first_name': 'Kira',
-        'last_name': 'Nerys'
-    })
-    # RunContext will only initialize if it validates, try first with valid data
-    context = RunContext(
-        namespace_root=onboarding_namespace_root,
-        request={
-            PayloadKey.METHOD: method_identity,
-            PayloadKey.INPUT: data_provided
-        }
-    )
-    assert context.method == method_identity
-    assert context.input == data_provided
-    assert context.state.value == dict()
+class TestParams(ConstantNamespace):
+    item_key = 'item_key'
+    item_value = 'item value'
+    output_key = 'output_key'
+    output_value = 'output value'
 
-    # Fail cases, just to show validation is wired up
-    missing_input = BaseRuntimeData({
-        'first_name': 'Q'
-    })
-    with pytest.raises(RuntimeError) as excinfo:
-        RunContext(
-            namespace_root=onboarding_namespace_root,
-            request={
-                PayloadKey.METHOD: method_identity,
-                PayloadKey.INPUT: missing_input
-            }
-        )
-    assert 'Required data/payload key(s) missing' in str(excinfo.value)
+def test_context_settable_data():
+    context = RunContext()
 
-    unexpected_input = BaseRuntimeData({
-        'first_name': 'Seven',
-        'last_name': 'of Nine',
-        'designation': 'Seven of Nine, tertiary adjunct to Unimatrix Zero'
-    })
-    with pytest.raises(RuntimeError) as excinfo:
-        RunContext(
-            namespace_root=onboarding_namespace_root,
-            request={
-                PayloadKey.METHOD: method_identity,
-                PayloadKey.INPUT: unexpected_input
-            }
-        )
-    assert 'Unexpected data/payload key(s) provided' in str(excinfo.value)
+    assert context.output.value == {}
+    context.set_output({TestParams.output_key: TestParams.output_value})
+    assert context.output.value == {TestParams.output_key: TestParams.output_value}
+
+    assert context.item.value == {}
+    context.set_item({TestParams.item_key: TestParams.item_value})
+    assert context.item.value == {TestParams.item_key: TestParams.item_value}
 

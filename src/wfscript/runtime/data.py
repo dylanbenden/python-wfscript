@@ -21,7 +21,15 @@ class BaseRuntimeData(object):
         return self._run_identity
 
     def update(self, new_data):
-        self._value.update(unfloat(new_data))
+        unfloated_data = unfloat(new_data)
+        if isinstance(unfloated_data, dict):
+            self._value.update(unfloated_data)
+        else:
+            if not isinstance(self.value, dict):
+                self._value.update({self.value: unfloated_data})
+
+    def set(self, new_data):
+        self._value = unfloat(new_data)
 
     def __getitem__(self, item):
         if item not in self.value:
@@ -41,6 +49,12 @@ class Input(BaseRuntimeData):
 class Output(BaseRuntimeData):
     # non-persisted collector for data generated at runtime
     pass
+
+
+class Item(BaseRuntimeData):
+    # non-persisted collector for holding the "iter item" in a loop iteration
+    pass
+
 
 class State(BaseRuntimeData):
     pass

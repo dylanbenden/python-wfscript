@@ -14,7 +14,7 @@ def find_yaml_files(namespace):
 
 
 def _find_yaml_files(dir_path, root_path, root_module, results=None):
-    from ...names.store import NameStore
+    from ...runtime.store import NameStore
     if results is None:
         results = list()
     for contained in dir_path.iterdir():

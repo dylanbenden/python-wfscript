@@ -22,8 +22,9 @@ class StepsContainerNode(ContainerNode):
             else:
                 raise RuntimeError(f'There are no steps after {last_step_name}')
         result = execute_render(next_step_node, context)
-        result.add_step_resume_info(
-            method=context.method,
-            step=next_step_node.name
-        )
+        if next_step_node.name and next_step_node.name != self.value[-1].name:
+            result.add_step_resume_info(
+                method=context.method,
+                step=next_step_node.name
+            )
         return result

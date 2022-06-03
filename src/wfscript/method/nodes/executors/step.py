@@ -21,5 +21,5 @@ class StepNode(ExecutorNode):
 
     def execute_render_from_list(self, context):
         context.append_debug(execute_render(self.body, context))
-        return StepReturn(output_render(self.output, context))
+        return StepReturn(output_render(self.output, context), state=context.state.value)
 

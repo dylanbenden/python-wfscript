@@ -1,8 +1,8 @@
-- !META
-  namespace: content_root_validation/assignments
-  name: validate_assignments
-  version: 1.0
-  status: development
+- !IDENTITY
+  - !namespace content_root_validation/assignments
+  - !name validate_assignments
+  - !version 1.0
+  - !status development
 
 - !INPUT
   duty_assignments:

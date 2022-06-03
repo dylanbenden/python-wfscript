@@ -3,7 +3,6 @@ from decimal import Decimal
 
 from ..constants.identity import IdentityDelimeter
 from ..constants.method import TagName, MetaStatusChoice
-from ..constants.payload import PayloadKey
 from ..runtime.method_executor import MethodExecutor
 from ..runtime.utils.names import find_yaml_files
 
@@ -86,21 +85,6 @@ class NamespaceRoot(object):
             return self.domain.get_method(identity)
         raise RuntimeError(f'Method {identity} could not be resolved by namespace_root {self.identity}')
 
-    def get_validator(self, identity, last_step_info=None):
-        if not last_step_info:
-            if identity not in self.yaml_documents:
-                raise RuntimeError(f'Validator {identity} could not be resolved by namespace_root {self.identity}')
-            input_block = self.yaml_documents[identity][TagName.INPUT].value
-        else:
-            identity = last_step_info[PayloadKey.METHOD]
-            step_name = last_step_info[PayloadKey.STEP]
-            next_step = items_after_step(self.yaml_documents[identity][TagName.BODY].value, step_name)[0]
-            input_block = next_step.value.get(MethodKeyword.INPUT)
-        if input_block is not None:
-            validation_info = input_block
-        else:
-            validation_info = dict()
-        return InputValidator(identity, validation_info, self)
 
     def get_action(self, identity):
         if identity in self.actions:

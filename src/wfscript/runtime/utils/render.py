@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from ...constants import ConstantNamespace
-from ...method.nodes.base import WorkflowNode
 
 
 class OutputType(ConstantNamespace):
@@ -38,6 +37,7 @@ def execute_render(data, context):
 
 
 def identify_output_type(output):
+    from ...method.nodes.base import WorkflowNode
     if isinstance(output, WorkflowNode):
         return OutputType.NODE
     elif isinstance(output, dict):
@@ -92,6 +92,7 @@ def _output_render_list(data, context):
 
 
 def _output_render_scalar(data, context):
+    from ...method.nodes.base import WorkflowNode
     if isinstance(data, WorkflowNode):
         return data.output_render(context)
     else:
@@ -136,6 +137,7 @@ def _execute_render_list(data, context):
 
 
 def _execute_render_scalar(data, context):
+    from ...method.nodes.base import WorkflowNode
     if isinstance(data, WorkflowNode):
         return data.execute_render(context)
     else:

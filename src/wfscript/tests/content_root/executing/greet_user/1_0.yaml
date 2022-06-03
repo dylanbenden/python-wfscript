@@ -17,8 +17,9 @@
     - !INPUT
         name: !Input name
     - !OUTPUT
-      - !Output greeting
+      - !State
+        greeting: !Output
 
 
 - !OUTPUT
-  greeting: !Output greeting
+  greeting: !State greeting

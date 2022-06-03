@@ -16,10 +16,9 @@ class RunContext(object):
                 self._state = State(state)
         else:
             self._state = State()
-        self._last_step = resume_info
-        self._run_id = request.get('run_id', str(uuid.uuid4()))
-        if not skip_validation:
-            self.validate_input()
+        self._runtime = dict()
+        self._resume_info = resume_info or dict()
+        self._debug = list()
 
     @property
     def method(self):
@@ -46,20 +45,25 @@ class RunContext(object):
         return self._state
 
     @property
-    def last_step(self):
-        return self._last_step
+    def runtime(self):
+        return self._runtime
 
     @property
-    def run_id(self):
-        return self._run_id
+    def resume_info(self):
+        return self._resume_info
 
-    def validate_input(self):
-        validator = self.namespace_root.get_validator(self.method, self.last_step)
-        validator.validate(self.input.value)
+    @property
+    def debug(self):
+        return self._debug
+
+    def update_runtime(self, data):
+        self._runtime.update(data)
+
+    def append_debug(self, result):
+        self._debug.append(result)
 
 
-
-def get_context(identity, namespace_root, input_data=None, state=None, resume_info=None):
+def get_context(identity, namespace_root, input_data=None, state=None, resume_info=None, skip_validation=False):
     if input_data is None:
         input_data = dict()
     if state is None:
@@ -72,7 +76,8 @@ def get_context(identity, namespace_root, input_data=None, state=None, resume_in
         namespace_root=namespace_root,
         request=request,
         resume_info=resume_info,
-        state=state
+        state=state,
+        skip_validation=skip_validation
     )
 
 def get_inner_context(new_identity, old_context, input_data):

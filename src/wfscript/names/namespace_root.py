@@ -1,11 +1,13 @@
+from decimal import Decimal
+
 from ..constants.identity import IdentityDelimeter
-from ..constants.loading import TagName, MetaSectionKey, MetaStatusChoice, MethodKeyword
+from ..constants.method import TagName, MetaStatusChoice, MethodKeyword
 from ..constants.payload import PayloadKey
-from ..executors.method import MethodExecutor
-from ..executors.validator import ValidatorExecutor
-from ..utils.identity import construct_identity
-from ..utils.method import items_after_step
-from ..utils.names import find_yaml_files
+from ..method.executor import MethodExecutor
+from ..method.input_validator import InputValidator
+from ..runtime.utils.identity import construct_identity
+from ..runtime.utils.method import items_after_step
+from ..runtime.utils.names import find_yaml_files
 
 
 class NamespaceRoot(object):
@@ -56,15 +58,15 @@ class NamespaceRoot(object):
                 self._actions[action_identity] = fx
 
     def load_yaml_documents(self):
-        from ..loading.loader import load_yaml_document
+        from ..method.document_loader import load_method
         semantic_versions = dict()
         for document_path in find_yaml_files(self):
             with open(document_path, 'r') as document:
-                yaml_document = load_yaml_document(document.read())
+                yaml_document = load_method(document.read())
                 # todo: WFS-16 - validate yaml_document on load
-                document_identity = construct_identity(yaml_document[TagName.META].value)
-                numeric_version = yaml_document[TagName.META].value[MetaSectionKey.VERSION]
-                semantic_version = yaml_document[TagName.META].value[MetaSectionKey.STATUS]
+                document_identity = construct_identity(yaml_document[TagName.IDENTITY].value)
+                numeric_version = Decimal(yaml_document[TagName.IDENTITY].value[TagName.version])
+                semantic_version = yaml_document[TagName.IDENTITY].value[TagName.status]
                 if numeric_version > semantic_versions.get(semantic_version, 0):
                     semantic_versions[semantic_version] = numeric_version
                     default_identity = f'{document_identity.split(IdentityDelimeter.VERSION)[0]}'
@@ -96,7 +98,7 @@ class NamespaceRoot(object):
             validation_info = input_block
         else:
             validation_info = dict()
-        return ValidatorExecutor(identity, validation_info, self)
+        return InputValidator(identity, validation_info, self)
 
     def get_action(self, identity):
         if identity in self.actions:

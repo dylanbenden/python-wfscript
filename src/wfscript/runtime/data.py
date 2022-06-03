@@ -1,7 +1,7 @@
 from copy import deepcopy
 
+from .utils.json import unfloat
 from ..constants.payload import PayloadKey
-from ..utils.json import unfloat
 
 
 class BaseRuntimeData(object):
@@ -43,25 +43,4 @@ class Output(BaseRuntimeData):
     pass
 
 class State(BaseRuntimeData):
-    _last_method = None
-    _last_step = None
-
-    @property
-    def last_method(self):
-        return self._last_method
-
-    @property
-    def last_step(self):
-        return self._last_step
-
-    @property
-    def resume_info(self):
-        return {
-            PayloadKey.STATE: self.value,
-            PayloadKey.METHOD: self.last_method,
-            PayloadKey.STEP: self.last_step
-        }
-
-    def set_resume_state(self, method, step):
-        self._last_method = method
-        self._last_step = step
+    pass

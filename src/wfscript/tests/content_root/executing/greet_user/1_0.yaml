@@ -1,8 +1,8 @@
-- !META
-  namespace: content_root/executing
-  name: greet_user
-  version: 1.0
-  status: production
+- !IDENTITY
+  - !namespace content_root/executing
+  - !name greet_user
+  - !version 1.0
+  - !status production
 
 
 - !INPUT
@@ -13,11 +13,13 @@
 
 - !BODY
   - !Action
-    id: content_root/executing::hello_world==production
-    input:
-      name: !Input name
-    output>>: !Output greeting
+    - !IDENTITY content_root/executing::hello_world==production
+    - !INPUT
+        name: !Input name
+    - !OUTPUT
+      - !State
+        greeting: !Output
 
 
-- !RETURN
-  greeting: !Output greeting
+- !OUTPUT
+  greeting: !State greeting

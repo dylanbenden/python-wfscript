@@ -1,2 +1,2 @@
-from .executors.method import MethodExecutor
-from .names.store import NameStore
+from .runtime.method_executor import MethodExecutor
+from .runtime.store import NameStore

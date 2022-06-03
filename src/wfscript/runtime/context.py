@@ -1,14 +1,13 @@
-import uuid
-
-from .data import Output, State, Input
+from .data import Output, State, Input, Item
 from ..constants.payload import PayloadKey
 
 
 class RunContext(object):
-    def __init__(self, namespace_root=None, request=None, state=None, resume_info=None, skip_validation=False):
+    def __init__(self, namespace_root=None, request=None, state=None, resume_info=None):
         self._namespace_root = namespace_root
         self._request = request
         self._output = Output()
+        self._item = Item()
         if state is not None:
             if isinstance(state, State):
                 self._state = state
@@ -16,10 +15,8 @@ class RunContext(object):
                 self._state = State(state)
         else:
             self._state = State()
-        self._last_step = resume_info
-        self._run_id = request.get('run_id', str(uuid.uuid4()))
-        if not skip_validation:
-            self.validate_input()
+        self._resume_info = resume_info or dict()
+        self._debug = list()
 
     @property
     def method(self):
@@ -42,21 +39,33 @@ class RunContext(object):
         return self._output
 
     @property
+    def item(self):
+        return self._item
+
+    @property
     def state(self):
         return self._state
 
     @property
-    def last_step(self):
-        return self._last_step
+    def runtime(self):
+        return self._runtime
 
     @property
-    def run_id(self):
-        return self._run_id
+    def resume_info(self):
+        return self._resume_info
 
-    def validate_input(self):
-        validator = self.namespace_root.get_validator(self.method, self.last_step)
-        validator.validate(self.input.value)
+    @property
+    def debug(self):
+        return self._debug
 
+    def set_output(self, value):
+        self._output.set(value)
+
+    def set_item(self, value):
+        self._item.set(value)
+
+    def append_debug(self, result):
+        self._debug.append(result)
 
 
 def get_context(identity, namespace_root, input_data=None, state=None, resume_info=None):

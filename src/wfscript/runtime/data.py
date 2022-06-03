@@ -1,7 +1,7 @@
 from copy import deepcopy
 
+from .utils.json import unfloat
 from ..constants.payload import PayloadKey
-from ..utils.json import unfloat
 
 
 class BaseRuntimeData(object):
@@ -21,7 +21,15 @@ class BaseRuntimeData(object):
         return self._run_identity
 
     def update(self, new_data):
-        self._value.update(unfloat(new_data))
+        unfloated_data = unfloat(new_data)
+        if isinstance(unfloated_data, dict):
+            self._value.update(unfloated_data)
+        else:
+            if not isinstance(self.value, dict):
+                self._value.update({self.value: unfloated_data})
+
+    def set(self, new_data):
+        self._value = unfloat(new_data)
 
     def __getitem__(self, item):
         if item not in self.value:
@@ -42,26 +50,11 @@ class Output(BaseRuntimeData):
     # non-persisted collector for data generated at runtime
     pass
 
+
+class Item(BaseRuntimeData):
+    # non-persisted collector for holding the "iter item" in a loop iteration
+    pass
+
+
 class State(BaseRuntimeData):
-    _last_method = None
-    _last_step = None
-
-    @property
-    def last_method(self):
-        return self._last_method
-
-    @property
-    def last_step(self):
-        return self._last_step
-
-    @property
-    def resume_info(self):
-        return {
-            PayloadKey.STATE: self.value,
-            PayloadKey.METHOD: self.last_method,
-            PayloadKey.STEP: self.last_step
-        }
-
-    def set_resume_state(self, method, step):
-        self._last_method = method
-        self._last_step = step
+    pass

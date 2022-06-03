@@ -1,8 +1,8 @@
-- !META
-  namespace: content_root/executing
-  name: talent_pipeline
-  version: 1.0
-  status: production
+- !IDENTITY
+  - !namespace content_root/executing
+  - !name talent_pipeline
+  - !version 1.0
+  - !status production
 
 - !INPUT
   first_name:
@@ -17,55 +17,60 @@
     required: true
 
 
-- !BODY
+- !STEPS
   - !Step
-    name: create_candidate_profile
-    body:
+    - !name create_candidate_profile
+    - !BODY
       - !State
-        first_name: !Input first_name
-        last_name: !Input last_name
-        personal_email: !Input personal_email
+          first_name: !Input first_name
+          last_name: !Input last_name
+          personal_email: !Input personal_email
       - !Action
-        id: content_root/executing::add_prospect==production
-        input:
-          first_name: !State first_name
-          last_name: !State last_name
-          email: !State personal_email
-        output>>: !State user_name
-    return:
+        - !IDENTITY content_root/executing::add_prospect==production
+        - !INPUT
+            first_name: !State first_name
+            last_name: !State last_name
+            email: !State personal_email
+        - !OUTPUT
+          - !State
+             user_name: !Output
+    - !OUTPUT
       first_name: !State first_name
       last_name: !State last_name
       user_name: !State user_name
 
   - !Step
-    name: send_hire_letter
-    body:
+    - !name send_hire_letter
+    - !BODY
       - !Action
-        id: content_root/executing::send_hire_letter==production
-        input:
+        - !IDENTITY content_root/executing::send_hire_letter==production
+        - !INPUT
           first_name: !State first_name
           last_name: !State last_name
           email: !State personal_email
-        output>>: !State acceptance_code
-    return:
+        - !OUTPUT
+          - !State
+             acceptance_code: !Output
+    - !OUTPUT
       user_name: !State user_name
       acceptance_code: !State acceptance_code
 
   - !Step
-    name: accept_offer
-    input:
+    - !name accept_offer
+    - !INPUT
       acceptance_code:
         data_type: string
         required: true
-    body:
+    - !BODY
       - !Action
-        id: content_root/executing::accept_offer==production
-        input:
-          user_name: !State user_name
-          acceptance_code_generated: !State acceptance_code
-          acceptance_code_provided: !Input acceptance_code
-        output>>: !Output enrollment_message
-
-- !RETURN
-  user_name: !State user_name
-  message: !Output enrollment_message
+        - !IDENTITY content_root/executing::accept_offer==production
+        - !INPUT
+            user_name: !State user_name
+            acceptance_code_generated: !State acceptance_code
+            acceptance_code_provided: !Input acceptance_code
+        - !OUTPUT
+          - !State
+            enrollment_message: !Output
+    - !OUTPUT
+      user_name: !State user_name
+      message: !State enrollment_message

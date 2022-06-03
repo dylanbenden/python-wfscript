@@ -1,9 +1,3 @@
-"""A setuptools based setup module.
-See:
-https://packaging.python.org/guides/distributing-packages-using-setuptools/
-https://github.com/pypa/sampleproject
-"""
-
 from setuptools import setup, find_packages
 import pathlib
 
@@ -14,16 +8,15 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='python-wfscript',
-    version='0.2.1',
-    description='A high-level, domain-specific language for authoring executable workflow content',
+    version='1.0',
+    description='A Python runtime for wfscript: a declarative, graph-oriented language for authoring workflow content',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/dylanbenden/python-wfscript/',
     author='Dylan Benden',
-    author_email='dylan@flowflow.org',
+    author_email='dylan@wfscript.org',
     classifiers=[
-        'Development Status :: 4 - Beta',
-        # 'Development Status :: 5 - Production/Stable',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',

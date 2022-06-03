@@ -1,11 +1,9 @@
-import uuid
-
 from .data import Output, State, Input, Item
 from ..constants.payload import PayloadKey
 
 
 class RunContext(object):
-    def __init__(self, namespace_root=None, request=None, state=None, resume_info=None, skip_validation=False):
+    def __init__(self, namespace_root=None, request=None, state=None, resume_info=None):
         self._namespace_root = namespace_root
         self._request = request
         self._output = Output()
@@ -17,7 +15,6 @@ class RunContext(object):
                 self._state = State(state)
         else:
             self._state = State()
-        self._runtime = dict()
         self._resume_info = resume_info or dict()
         self._debug = list()
 
@@ -66,9 +63,6 @@ class RunContext(object):
 
     def set_item(self, value):
         self._item.set(value)
-
-    def update_runtime(self, data):
-        self._runtime.update(data)
 
     def append_debug(self, result):
         self._debug.append(result)

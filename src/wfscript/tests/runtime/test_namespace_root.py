@@ -1,10 +1,7 @@
 import types
 
 from ..content_root.loading import loading_namespace_root, content_root_path
-from ..content_root.validation import validation_namespace_root
-from ...constants.loading import TagName, MetaStatusChoice
-from ...executors.method import MethodExecutor
-from ...executors.validator import ValidatorExecutor
+from ... import MethodExecutor
 
 
 def test_properties():
@@ -33,34 +30,6 @@ def test_load_yaml_documents():
         test_identity
     ]
     assert sorted(list(loading_namespace_root.yaml_documents.keys())) == sorted(expected)
-
-    v1_expected_meta = {
-        'name': 'versioned_method',
-        'namespace': 'content_root/loading',
-        'status': MetaStatusChoice.PRODUCTION,
-        'version': 1.0
-    }
-    v1_1_expected_meta = {
-        'name': 'versioned_method',
-        'namespace': 'content_root/loading',
-        'status': MetaStatusChoice.PRODUCTION,
-        'version': 1.1
-    }
-    v1_2_expected_meta = {
-        'name': 'versioned_method',
-        'namespace': 'content_root/loading',
-        'status': MetaStatusChoice.TESTING,
-        'version': 1.2
-    }
-    prod_expected_meta = v1_1_expected_meta
-    test_expected_meta = v1_2_expected_meta
-    unversioned_expected_meta = prod_expected_meta
-    assert loading_namespace_root.yaml_documents[v1_identity][TagName.META].value == v1_expected_meta
-    assert loading_namespace_root.yaml_documents[v1_1_identity][TagName.META].value == v1_1_expected_meta
-    assert loading_namespace_root.yaml_documents[v1_2_identity][TagName.META].value == v1_2_expected_meta
-    assert loading_namespace_root.yaml_documents[prod_identity][TagName.META].value == prod_expected_meta
-    assert loading_namespace_root.yaml_documents[test_identity][TagName.META].value == test_expected_meta
-    assert loading_namespace_root.yaml_documents[unversioned_identity][TagName.META].value == unversioned_expected_meta
 
 
 def test_load_actions():
@@ -112,19 +81,6 @@ def test_get_method():
     v1_1_method = loading_namespace_root.get_method(v1_1_identity)
     assert isinstance(v1_1_method, MethodExecutor)
     assert v1_1_method.identity == v1_1_identity
-
-
-def test_get_validator():
-    assignment_identity = 'content_root_validation/assignments::validate_assignments==1.0'
-    person_identity = 'content_root_validation/personnel::spec_identify_people==1.0'
-
-    assignment_validator = validation_namespace_root.get_validator(assignment_identity)
-    assert isinstance(assignment_validator, ValidatorExecutor)
-    assert assignment_validator.identity == assignment_identity
-
-    person_validator = validation_namespace_root.get_validator(person_identity)
-    assert isinstance(person_validator, ValidatorExecutor)
-    assert person_validator.identity == person_identity
 
 
 def test_get_action():

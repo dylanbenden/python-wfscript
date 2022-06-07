@@ -7,7 +7,7 @@ Install python-wfscript `default` branch:
 python -m pip install git+https://github.com/dylanbenden/python-wfscript.git
 ```
 
-Install python-wfscript `v2.0` release/tag:
+Install python-wfscript `v1.0` release/tag:
 ```bash
 python -m pip install git+https://github.com/dylanbenden/python-wfscript.git@v0.2
 ``` 
